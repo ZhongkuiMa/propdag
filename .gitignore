@@ -1,0 +1,8 @@
+# ignore the setting of pycharm
+.idea
+# ignore all the python cache
+*.pyc
+# ignore the cache
+__pycache__
+# ignore the cache
+.DS_Store
