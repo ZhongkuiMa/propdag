@@ -6,6 +6,8 @@ As we all know, **bound propagation has dominated** the field of neural network 
 [ReLUVal (USENIX Security'18)](https://www.usenix.org/conference/usenixsecurity18/presentation/wang-shiqi)
 [DeepZ (NeurIPS'18)](https://proceedings.neurips.cc/paper_files/paper/2018/hash/f2f446980d8e971ef3da97af089481c3-Abstract.html)[Fast-Lin (ICML'18)](https://proceedings.mlr.press/v80/weng18a.html)[CROWN (NeurIPS'18)](https://proceedings.neurips.cc/paper/2018/hash/d04863f100d59b3eb688a11f95b0ae60-Abstract.html)[DeepPoly (POPL'19)](https://dl.acm.org/doi/abs/10.1145/3290354), and so on and so on. 🔥
 
+See more discussion in my [blog](https://zhongkuima.github.io/blogs/bound_prop.html).
+
 ---
 
 ## 🎯 Why This Framework?
