@@ -17,7 +17,7 @@ class BackwardToyNode(TNode):
         print(f"BACKWARD {self.name}".center(80, "-"))
 
         self._bwdprop_symbnds()
-        self._cal_bnds()
+        self._cal_bnds()  # This may bot be valid for all nodes.
 
     def clear_fwd_cache(self):
         if len(self.next_nodes) > 0:
