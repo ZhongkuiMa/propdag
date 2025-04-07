@@ -11,30 +11,30 @@ from .node import TNode
 
 
 def _topo_sort_forward(nodes: list[TNode]) -> list[TNode]:
-    visited = []
-    stack = []
+    """
+    This is a breadth-first search algorithm to sort the nodes in topological order.
+    We need breadth-first search because we do not want to cache the nodes close to
+    the input node. In neural networks, a layer close to the input has more dimensions.
+    """
+    in_degrees = {node: len(node.pre_nodes) for node in nodes}
 
-    def visit(node: TNode):
-        if node in visited:
-            return
-        visited.append(node)
+    queue = [node for node in nodes if in_degrees[node] == 0]
+    sorted_nodes = []
+    while queue:
+        node = queue.pop(0)
+        sorted_nodes.append(node)
         for next_node in node.next_nodes:
-            visit(next_node)
-        stack.append(node)
+            in_degrees[next_node] -= 1
+            if in_degrees[next_node] == 0:
+                queue.append(next_node)
 
-    for node in nodes:
-        visit(node)
+    if len(sorted_nodes) != len(nodes):
+        raise ValueError("Graph has a cycle, cannot perform topological sort")
 
-    return stack[::-1]
+    return sorted_nodes
 
 
 def _topo_sort_backward(nodes: list[TNode]) -> dict[TNode, list[TNode]]:
-    """
-
-    :param nodes: The nodes in topological order.
-    :return:
-    """
-
     backward_sorts = {}
     for node in nodes:
         # Find all nodes can reach this node.
@@ -44,7 +44,7 @@ def _topo_sort_backward(nodes: list[TNode]) -> dict[TNode, list[TNode]]:
         while True:
             if not queue:
                 break
-            current_node = queue.pop()
+            current_node = queue.pop(0)
             for pre_node in current_node.pre_nodes:
                 if pre_node not in backward_sort:
                     backward_sort.append(pre_node)
@@ -56,24 +56,22 @@ def _topo_sort_backward(nodes: list[TNode]) -> dict[TNode, list[TNode]]:
     return backward_sorts
 
 
-def _clear_forward_cache(cache_counter: dict[TNode, int], nodes: list[TNode]):
+def _clear_fwd_cache(cache_counter: dict[TNode, int], nodes: list[TNode]):
     for node in nodes:
         cache_counter[node] -= 1
-        # If the node is the last node, the cache_counter will be -1.
-        if cache_counter[node] in {0, -1}:
-            node.clear_forward_cache()
+        if cache_counter[node] == 0:
+            node.clear_fwd_cache()
             del cache_counter[node]
 
 
-def _clear_backward_cache(cache_counter: dict[TNode, int], nodes: list[TNode]):
+def _clear_bwd_cache(cache_counter: dict[TNode, int], nodes: list[TNode]):
     for node in nodes:
-        # For backward cache, if we use next_nodes, the next node may not in the
-        # backward sort, so we need to accept the node is not in the cache_counter.
-        counter = cache_counter.get(node)
-        if counter is not None:
-            cache_counter[node] = counter - 1
-            if cache_counter[node] <= 0:
-                node.clear_backward_cache()
+        if node in cache_counter:
+            # Some next nodes may not be involved in the backward pass.
+            cache_counter[node] -= 1
+            if cache_counter[node] == 0:
+                node.clear_bwd_cache()
+                del cache_counter[node]
 
 
 class TModel(ABC):
@@ -94,14 +92,15 @@ class TModel(ABC):
         self._cache = cache
         self._arguments = arguments
         for node in self._nodes:
-            node.cache = cache
-            node.arguments = arguments
+            node._cache = cache
+            node._arguments = arguments
 
         if self.arguments.prop_mode == PropMode.BACKWARD:
             self._all_backward_sorts = _topo_sort_backward(self.nodes)
 
     def run(self):
         cache_counter = {node: len(node.next_nodes) for node in self._nodes}
+        cache_counter[self.nodes[-1]] = 1  # For the last node
 
         node = self.nodes[0]
         node.forward()
@@ -116,22 +115,23 @@ class TModel(ABC):
             if self.arguments.prop_mode == PropMode.BACKWARD:
                 self._backsub(node)
 
-            _clear_forward_cache(cache_counter, node.pre_nodes)
+            _clear_fwd_cache(cache_counter, node.pre_nodes)
 
-        _clear_forward_cache(cache_counter, [node])
+        _clear_fwd_cache(cache_counter, [node])
 
     def _backsub(self, node: TNode):
         backward_sort = self._all_backward_sorts[node]
         cache_counter = {node: len(node.pre_nodes) for node in backward_sort}
+        cache_counter[self.nodes[0]] = 1  # For the input node
 
         node.backward()
 
         for j in range(1, len(backward_sort)):
             node = backward_sort[j]
             node.backward()
-            _clear_backward_cache(cache_counter, node.next_nodes)
+            _clear_bwd_cache(cache_counter, node.next_nodes)
 
-        _clear_backward_cache(cache_counter, [node])
+        _clear_bwd_cache(cache_counter, [node])
 
     @property
     def nodes(self):
