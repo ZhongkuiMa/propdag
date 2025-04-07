@@ -21,10 +21,22 @@ class TNode(ABC):
     def backward(self):
         raise RuntimeError("This method should be instantiated in the child class.")
 
-    def clear_forward_cache(self):
+    def clear_fwd_cache(self):
         raise RuntimeError("This method should be instantiated in the child class.")
 
-    def clear_backward_cache(self):
+    def clear_bwd_cache(self):
+        raise RuntimeError("This method should be instantiated in the child class.")
+
+    def _build_rlxs(self):
+        raise RuntimeError("This method should be instantiated in the child class.")
+
+    def _fwdprop_symbnds(self):
+        raise RuntimeError("This method should be instantiated in the child class.")
+
+    def _bwdprop_symbnds(self):
+        raise RuntimeError("This method should be instantiated in the child class.")
+
+    def _cal_bnds(self):
         raise RuntimeError("This method should be instantiated in the child class.")
 
     @property

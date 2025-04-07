@@ -1,19 +1,14 @@
 __docformat__ = "restructured"
 __all__ = ["ToyModel"]
 
-from propdag import TNode
 from propdag.template import TModel, TCache, TArguments
 
 
 class ToyModel(TModel):
     def prepare(self, cache: TCache, arguments: TArguments):
-        print("Preparing...")
+        print("Preparing ToyModel...")
         super().prepare(cache, arguments)
 
     def run(self):
-        print("Running...")
+        print("Running ToyModel...")
         super().run()
-
-    def _backsub(self, node: TNode):
-        print("Backsub...")
-        super()._backsub(node)
