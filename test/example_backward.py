@@ -47,8 +47,3 @@ if __name__ == "__main__":
     arguments = ToyArguments(prop_mode=PropMode.BACKWARD)
     model.prepare(cache, arguments)
     model.run()
-
-    # cache = ToyCache()
-    # arguments = ToyArguments(prop_mode=PropMode.BACKWARD)
-    # model.prepare(cache, arguments)
-    # model.run()
