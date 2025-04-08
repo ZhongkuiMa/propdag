@@ -4,7 +4,7 @@ __all__ = ["TModel"]
 
 from abc import ABC
 
-from propdag.utils import *
+from ..utils import *
 from .arguments import TArguments
 from .cache import TCache
 from .node import TNode

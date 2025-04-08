@@ -1,7 +1,7 @@
 __docformat__ = "restructured"
 __all__ = ["ToyModel"]
 
-from propdag.template import TModel, TCache, TArguments
+from ..template import *
 
 
 class ToyModel(TModel):

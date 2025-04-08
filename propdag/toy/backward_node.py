@@ -1,7 +1,7 @@
 __docformat__ = "restructuredtext"
 __all__ = ["BackwardToyNode"]
 
-from propdag.template import *
+from ..template import *
 from .arguments import *
 from .cache import *
 

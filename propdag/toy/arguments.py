@@ -1,7 +1,7 @@
 __docformat__ = "restructuredtext"
 __all__ = ["ToyArguments"]
 
-from propdag.template import *
+from ..template import *
 
 
 class ToyArguments(TArguments):

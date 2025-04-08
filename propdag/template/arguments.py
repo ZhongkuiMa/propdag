@@ -4,7 +4,7 @@ __all__ = ["TArguments"]
 from abc import ABC
 from dataclasses import dataclass
 
-from propdag.utils import PropMode
+from ..utils import PropMode
 
 
 @dataclass(frozen=True, slots=True)
