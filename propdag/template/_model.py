@@ -5,9 +5,9 @@ __all__ = ["TModel"]
 from abc import ABC
 
 from ..utils import *
-from .arguments import TArguments
-from .cache import TCache
-from .node import TNode
+from ._arguments import TArguments
+from ._cache import TCache
+from ._node import TNode
 
 
 def _topo_sort_forward(nodes: list[TNode]) -> list[TNode]:
@@ -106,20 +106,20 @@ class TModel(ABC):
         node.forward()
 
         if self.arguments.prop_mode == PropMode.BACKWARD:
-            self._backsub(node)
+            self.backsub(node)
 
         for i in range(1, len(self.nodes)):
             node = self.nodes[i]
             node.forward()
 
             if self.arguments.prop_mode == PropMode.BACKWARD:
-                self._backsub(node)
+                self.backsub(node)
 
             _clear_fwd_cache(cache_counter, node.pre_nodes)
 
         _clear_fwd_cache(cache_counter, [node])
 
-    def _backsub(self, node: TNode):
+    def backsub(self, node: TNode):
         backward_sort = self._all_backward_sorts[node]
         cache_counter = {node: len(node.pre_nodes) for node in backward_sort}
         cache_counter[self.nodes[0]] = 1  # For the input node

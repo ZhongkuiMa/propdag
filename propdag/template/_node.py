@@ -3,8 +3,8 @@ __all__ = ["TNode"]
 
 from abc import ABC
 
-from .arguments import TArguments
-from .cache import TCache
+from ._arguments import TArguments
+from ._cache import TCache
 
 
 class TNode(ABC):

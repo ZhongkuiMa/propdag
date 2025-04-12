@@ -2,8 +2,8 @@ __docformat__ = "restructuredtext"
 __all__ = ["ForwardToyNode"]
 
 from ..template import *
-from .arguments import *
-from .cache import *
+from ._arguments import *
+from ._cache import *
 
 
 class ForwardToyNode(TNode):
