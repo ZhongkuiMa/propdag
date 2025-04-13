@@ -3,21 +3,21 @@ __all__ = ["TNode"]
 
 from abc import ABC
 
-from ._arguments import TArguments
+from ._arguments import TArgument
 from ._cache import TCache
 
 
 class TNode(ABC):
     _name: str
-    _cache: TCache | None
-    _arguments: TArguments | None
+    _cache: TCache
+    _argument: TArgument
     _pre_nodes: list["TNode"]
     _next_nodes: list["TNode"]
 
-    def __init__(self, name: str):
+    def __init__(self, name: str, cache: TCache, argument: TArgument):
         self._name = name
-        self._cache = None
-        self._arguments = None
+        self._cache = cache
+        self._argument = argument
         self._pre_nodes = []
         self._next_nodes = []
 
@@ -58,12 +58,12 @@ class TNode(ABC):
         self._cache = value
 
     @property
-    def arguments(self) -> TArguments:
-        return self._arguments
+    def argument(self) -> TArgument:
+        return self._argument
 
-    @arguments.setter
-    def arguments(self, value: TArguments):
-        self._arguments = value
+    @argument.setter
+    def argument(self, value: TArgument):
+        self._argument = value
 
     @property
     def pre_nodes(self) -> list["TNode"]:

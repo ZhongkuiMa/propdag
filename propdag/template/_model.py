@@ -5,7 +5,7 @@ __all__ = ["TModel"]
 from abc import ABC
 
 from ..utils import *
-from ._arguments import TArguments
+from ._arguments import TArgument
 from ._cache import TCache
 from ._node import TNode
 
@@ -82,23 +82,17 @@ class TModel(ABC):
     """
 
     _nodes: list[TNode]
-    _all_backward_sorts: dict[TNode, list[TNode]] | None
-    _cache: TCache | None
-    _arguments: TArguments | None
+    _cache: TCache
+    _arguments: TArgument
+    _all_backward_sorts: dict[TNode, list[TNode]]
 
     def __init__(self, nodes: list[TNode]):
-        self._nodes = nodes
-        self._all_backward_sorts = None
-        self._cache = None
-        self._arguments = None
-
-    def prepare(self, cache: TCache, arguments: TArguments):
-        self._nodes = _topo_sort_forward(self._nodes)
-        self._cache = cache
-        self._arguments = arguments
-        for node in self._nodes:
-            node._cache = cache
-            node._arguments = arguments
+        self._nodes = _topo_sort_forward(nodes)
+        self._cache = nodes[0].cache
+        self._arguments = nodes[0].argument
+        for node in nodes[1:]:
+            assert node.cache == self._cache
+            assert node.argument == self._arguments
 
         if self.arguments.prop_mode == PropMode.BACKWARD:
             self._all_backward_sorts = _topo_sort_backward(self.nodes)
@@ -147,5 +141,5 @@ class TModel(ABC):
         return self._cache
 
     @property
-    def arguments(self) -> TArguments:
+    def arguments(self) -> TArgument:
         return self._arguments

@@ -1,12 +1,15 @@
 from propdag import *
 
 if __name__ == "__main__":
-    node1 = BackwardToyNode("Node-1")
-    node2 = BackwardToyNode("Node-2")
-    node3 = BackwardToyNode("Node-3")
-    node4 = BackwardToyNode("Node-4")
-    node5 = BackwardToyNode("Node-5")
-    node6 = BackwardToyNode("Node-6")
+    cache = ToyCache()
+    arguments = ToyArgument(prop_mode=PropMode.BACKWARD)
+
+    node1 = BackwardToyNode("Node-1", cache, arguments)
+    node2 = BackwardToyNode("Node-2", cache, arguments)
+    node3 = BackwardToyNode("Node-3", cache, arguments)
+    node4 = BackwardToyNode("Node-4", cache, arguments)
+    node5 = BackwardToyNode("Node-5", cache, arguments)
+    node6 = BackwardToyNode("Node-6", cache, arguments)
     node1.next_nodes = [node2, node3]
     node2.pre_nodes = [node1]
     node2.next_nodes = [node4]
@@ -42,8 +45,4 @@ if __name__ == "__main__":
     print(dag_str)
 
     model = ToyModel(nodes_list)
-
-    cache = ToyCache()
-    arguments = ToyArguments(prop_mode=PropMode.BACKWARD)
-    model.prepare(cache, arguments)
     model.run()

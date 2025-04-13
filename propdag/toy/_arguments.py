@@ -1,8 +1,8 @@
 __docformat__ = "restructuredtext"
-__all__ = ["ToyArguments"]
+__all__ = ["ToyArgument"]
 
 from ..template import *
 
 
-class ToyArguments(TArguments):
+class ToyArgument(TArgument):
     pass

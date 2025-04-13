@@ -9,7 +9,7 @@ from ._cache import *
 class BackwardToyNode(TNode):
     _name: str
     _cache: ToyCache
-    _arguments: ToyArguments
+    _argument: ToyArgument
     _pre_nodes: list["BackwardToyNode"]
     _next_nodes: list["BackwardToyNode"]
 
@@ -40,8 +40,8 @@ class BackwardToyNode(TNode):
         return self._cache
 
     @property
-    def arguments(self) -> ToyArguments:
-        return self._arguments
+    def argument(self) -> ToyArgument:
+        return self._argument
 
     def _build_rlxs(self):
         print(f"{self.name}: Calculate relaxation if this is non-linear node")
