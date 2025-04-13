@@ -81,6 +81,11 @@ class TModel(ABC):
     consider subgraph, so there is no nested graphs.
     """
 
+    _nodes: list[TNode]
+    _all_backward_sorts: dict[TNode, list[TNode]] | None
+    _cache: TCache | None
+    _arguments: TArguments | None
+
     def __init__(self, nodes: list[TNode]):
         self._nodes = nodes
         self._all_backward_sorts = None
