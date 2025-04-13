@@ -11,7 +11,6 @@ As we all know, **bound propagation has dominated** the field of neural network 
 
 See more discussion in my blog [Bound Propagation Approaches in Neural Network Verification](https://zhongkuima.github.io/blogs/bound_prop.html).
 
-
 ## 🎯 Why This Framework?
 
 The goal of this repository is to provide a **lightweight yet powerful base** for researchers to rapidly prototype and test their own bound propagation algorithms.
@@ -35,7 +34,6 @@ Thanks to its **thoughtful and modular design** 🧩, you only need to worry abo
 - **Breadth-First Search (BFS) for topological ordering**. We use BFS to traverse the DAG and ensure that all nodes are processed in the correct order. This is crucial for bound propagation, as it ensures that all dependencies are resolved before processing a node. Further, the breadth-first search reduce the cached intermediate results, which is important for large networks because the layer closer to the input may have more dimensions than the layer closer to the output.
 - **Forward and Backward Propagation**. The framework supports both forward and backward propagation of bounds, which are the two main types of bound propagation used in neural network verification. The backward propagation of DAG is not easy to implement from scratch, but we have implemented it in a clean and modular way.
 
-
 ## 📦 Usage
 
 This is a framework — not a plug-and-play verifier — intended for extending and building your own bound propagation algorithms. It provides core logic and abstraction classes, especially for propagating bounds through DAG-structured networks.
@@ -49,7 +47,7 @@ This is a framework — not a plug-and-play verifier — intended for extending 
 
 You only need:
 
-- Python **>= 3.10** 🐍 for supporting some typing features.
+- Python **>= 3.10** (We are using Python 3.12.) 🐍 for supporting some typing features.
 
 There are **no additional third-party library requirements**. Just clone and go!
 
@@ -58,8 +56,8 @@ There are **no additional third-party library requirements**. Just clone and go!
 Check out the `test` folder for examples demonstrating how to use the framework. These include:
 
 - Basic toy examples to get started quickly 🎮
-  - `test/example_forward.py`: A simple example of forward propagation of bounds through a DAG.
-  - `test/example_backward.py`: A simple example of backward propagation of bounds through a DAG.
+    - `test/example_forward.py`: A simple example of forward propagation of bounds through a DAG.
+    - `test/example_backward.py`: A simple example of backward propagation of bounds through a DAG.
 - Simple DAG structures to help understand how bound propagation works across layers
 - A good starting point for developing and testing your own methods 🔧
 
