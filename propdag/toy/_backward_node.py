@@ -7,6 +7,12 @@ from ._cache import *
 
 
 class BackwardToyNode(TNode):
+    _name: str
+    _cache: ToyCache
+    _arguments: ToyArguments
+    _pre_nodes: list["BackwardToyNode"]
+    _next_nodes: list["BackwardToyNode"]
+
     def forward(self):
         print(f"FORWARD {self.name}".center(80, "="))
         self.cache.cur_node = self

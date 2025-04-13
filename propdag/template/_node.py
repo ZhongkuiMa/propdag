@@ -8,6 +8,12 @@ from ._cache import TCache
 
 
 class TNode(ABC):
+    _name: str
+    _cache: TCache | None
+    _arguments: TArguments | None
+    _pre_nodes: list["TNode"]
+    _next_nodes: list["TNode"]
+
     def __init__(self, name: str):
         self._name = name
         self._cache = None
