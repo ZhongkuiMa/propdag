@@ -216,3 +216,9 @@ Node-3: Clear backforward cache of symbolic bounds
 Node-1: Clear backforward cache of symbolic bounds
 Node-5: Clear forward cache of bounds
 ```
+
+## 🤝 Contributing
+
+We warmly welcome contributions from everyone! Whether it's fixing bugs 🐞, adding features ✨, improving documentation 📚, or just sharing ideas 💡—your input is appreciated!
+
+📌 NOTE: Direct pushes to the `main` branch are restricted. Make sure to fork the repository and submit a Pull Request for any changes!
