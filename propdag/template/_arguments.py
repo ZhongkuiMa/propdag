@@ -9,4 +9,4 @@ from ..utils import PropMode
 
 @dataclass(frozen=True, slots=True)
 class TArgument(ABC):
-    prop_mode: PropMode
+    prop_mode: PropMode = PropMode.BACKWARD
