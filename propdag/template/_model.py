@@ -4,10 +4,10 @@ __all__ = ["TModel"]
 
 from abc import ABC
 
-from ..utils import *
 from ._arguments import TArgument
 from ._cache import TCache
 from ._node import TNode
+from ..utils import *
 
 
 def _topo_sort_forward(nodes: list[TNode]) -> list[TNode]:

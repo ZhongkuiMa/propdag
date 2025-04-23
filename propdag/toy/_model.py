@@ -1,9 +1,9 @@
 __docformat__ = "restructured"
 __all__ = ["ToyModel"]
 
-from ..template import *
-from ._cache import ToyCache
 from ._arguments import ToyArgument
+from ._cache import ToyCache
+from ..template import *
 
 
 class ToyModel(TModel):
