@@ -97,7 +97,7 @@ class TModel(ABC):
         if self.arguments.prop_mode == PropMode.BACKWARD:
             self._all_backward_sorts = _topo_sort_backward(self.nodes)
 
-    def run(self):
+    def run(self, *args, **kwargs):
         cache_counter = {node: len(node.next_nodes) for node in self._nodes}
         cache_counter[self.nodes[-1]] = 1  # For the last node
 
