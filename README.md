@@ -76,16 +76,9 @@ The following shows the console output of running the `test/example_backward.py`
             \    /
             Node-6
     
-Preparing ToyModel...
 Running ToyModel...
 =================================FORWARD Node-1=================================
-Node-1: Calculate relaxation if this is non-linear node
---------------------------------BACKWARD Node-1---------------------------------
-Node-1: Prepare symbolic bounds of Node-1
-Node-1: Cache substitution
-Node-1: Calculate scalar bounds of Node-1
-Node-1: Cache scalar bounds
-Node-1: Clear backforward cache of symbolic bounds
+Node-1: Skip input node
 =================================FORWARD Node-2=================================
 Node-2: Calculate relaxation if this is non-linear node
 --------------------------------BACKWARD Node-2---------------------------------
@@ -94,12 +87,11 @@ Node-2: Cache substitution
 Node-2: Calculate scalar bounds of Node-2
 Node-2: Cache scalar bounds
 --------------------------------BACKWARD Node-1---------------------------------
-Node-1: Backsubstitute symbolic bounds of ['Node-2', 'Node-3']
+Node-1: Backsubstitute symbolic bounds of Node-2
 Node-1: Cache substitution
 Node-1: Calculate scalar bounds of Node-2
 Node-1: Cache scalar bounds
 Node-2: Clear backforward cache of symbolic bounds
-Node-1: Clear backforward cache of symbolic bounds
 =================================FORWARD Node-3=================================
 Node-3: Calculate relaxation if this is non-linear node
 --------------------------------BACKWARD Node-3---------------------------------
@@ -108,12 +100,11 @@ Node-3: Cache substitution
 Node-3: Calculate scalar bounds of Node-3
 Node-3: Cache scalar bounds
 --------------------------------BACKWARD Node-1---------------------------------
-Node-1: Backsubstitute symbolic bounds of ['Node-2', 'Node-3']
+Node-1: Backsubstitute symbolic bounds of Node-3
 Node-1: Cache substitution
 Node-1: Calculate scalar bounds of Node-3
 Node-1: Cache scalar bounds
 Node-3: Clear backforward cache of symbolic bounds
-Node-1: Clear backforward cache of symbolic bounds
 Node-1: Clear forward cache of bounds
 =================================FORWARD Node-4=================================
 Node-4: Calculate relaxation if this is non-linear node
@@ -123,24 +114,23 @@ Node-4: Cache substitution
 Node-4: Calculate scalar bounds of Node-4
 Node-4: Cache scalar bounds
 --------------------------------BACKWARD Node-2---------------------------------
-Node-2: Backsubstitute symbolic bounds of ['Node-4']
+Node-2: Backsubstitute symbolic bounds of Node-4
 Node-2: Cache substitution
 Node-2: Calculate scalar bounds of Node-4
 Node-2: Cache scalar bounds
 --------------------------------BACKWARD Node-3---------------------------------
-Node-3: Backsubstitute symbolic bounds of ['Node-4', 'Node-5']
+Node-3: Backsubstitute symbolic bounds of Node-4
 Node-3: Cache substitution
 Node-3: Calculate scalar bounds of Node-4
 Node-3: Cache scalar bounds
 Node-4: Clear backforward cache of symbolic bounds
 --------------------------------BACKWARD Node-1---------------------------------
-Node-1: Backsubstitute symbolic bounds of ['Node-2', 'Node-3']
+Node-1: Backsubstitute symbolic bounds of Node-4
 Node-1: Cache substitution
 Node-1: Calculate scalar bounds of Node-4
 Node-1: Cache scalar bounds
 Node-2: Clear backforward cache of symbolic bounds
 Node-3: Clear backforward cache of symbolic bounds
-Node-1: Clear backforward cache of symbolic bounds
 Node-2: Clear forward cache of bounds
 =================================FORWARD Node-5=================================
 Node-5: Calculate relaxation if this is non-linear node
@@ -149,32 +139,18 @@ Node-5: Prepare symbolic bounds of Node-5
 Node-5: Cache substitution
 Node-5: Calculate scalar bounds of Node-5
 Node-5: Cache scalar bounds
---------------------------------BACKWARD Node-4---------------------------------
-Node-4: Backsubstitute symbolic bounds of ['Node-5']
-Node-4: Cache substitution
-Node-4: Calculate scalar bounds of Node-5
-Node-4: Cache scalar bounds
 --------------------------------BACKWARD Node-3---------------------------------
-Node-3: Backsubstitute symbolic bounds of ['Node-4', 'Node-5']
+Node-3: Backsubstitute symbolic bounds of Node-5
 Node-3: Cache substitution
 Node-3: Calculate scalar bounds of Node-5
 Node-3: Cache scalar bounds
 Node-5: Clear backforward cache of symbolic bounds
---------------------------------BACKWARD Node-2---------------------------------
-Node-2: Backsubstitute symbolic bounds of ['Node-4']
-Node-2: Cache substitution
-Node-2: Calculate scalar bounds of Node-5
-Node-2: Cache scalar bounds
-Node-4: Clear backforward cache of symbolic bounds
 --------------------------------BACKWARD Node-1---------------------------------
-Node-1: Backsubstitute symbolic bounds of ['Node-2', 'Node-3']
+Node-1: Backsubstitute symbolic bounds of Node-5
 Node-1: Cache substitution
 Node-1: Calculate scalar bounds of Node-5
 Node-1: Cache scalar bounds
-Node-2: Clear backforward cache of symbolic bounds
 Node-3: Clear backforward cache of symbolic bounds
-Node-1: Clear backforward cache of symbolic bounds
-Node-4: Clear forward cache of bounds
 Node-3: Clear forward cache of bounds
 =================================FORWARD Node-6=================================
 Node-6: Calculate relaxation if this is non-linear node
@@ -183,37 +159,37 @@ Node-6: Prepare symbolic bounds of Node-6
 Node-6: Cache substitution
 Node-6: Calculate scalar bounds of Node-6
 Node-6: Cache scalar bounds
+--------------------------------BACKWARD Node-4---------------------------------
+Node-4: Backsubstitute symbolic bounds of Node-6
+Node-4: Cache substitution
+Node-4: Calculate scalar bounds of Node-6
+Node-4: Cache scalar bounds
 --------------------------------BACKWARD Node-5---------------------------------
-Node-5: Backsubstitute symbolic bounds of ['Node-6']
+Node-5: Backsubstitute symbolic bounds of Node-6
 Node-5: Cache substitution
 Node-5: Calculate scalar bounds of Node-6
 Node-5: Cache scalar bounds
 Node-6: Clear backforward cache of symbolic bounds
---------------------------------BACKWARD Node-4---------------------------------
-Node-4: Backsubstitute symbolic bounds of ['Node-5']
-Node-4: Cache substitution
-Node-4: Calculate scalar bounds of Node-6
-Node-4: Cache scalar bounds
---------------------------------BACKWARD Node-3---------------------------------
-Node-3: Backsubstitute symbolic bounds of ['Node-4', 'Node-5']
-Node-3: Cache substitution
-Node-3: Calculate scalar bounds of Node-6
-Node-3: Cache scalar bounds
-Node-5: Clear backforward cache of symbolic bounds
 --------------------------------BACKWARD Node-2---------------------------------
-Node-2: Backsubstitute symbolic bounds of ['Node-4']
+Node-2: Backsubstitute symbolic bounds of Node-6
 Node-2: Cache substitution
 Node-2: Calculate scalar bounds of Node-6
 Node-2: Cache scalar bounds
+--------------------------------BACKWARD Node-3---------------------------------
+Node-3: Backsubstitute symbolic bounds of Node-6
+Node-3: Cache substitution
+Node-3: Calculate scalar bounds of Node-6
+Node-3: Cache scalar bounds
 Node-4: Clear backforward cache of symbolic bounds
+Node-5: Clear backforward cache of symbolic bounds
 --------------------------------BACKWARD Node-1---------------------------------
-Node-1: Backsubstitute symbolic bounds of ['Node-2', 'Node-3']
+Node-1: Backsubstitute symbolic bounds of Node-6
 Node-1: Cache substitution
 Node-1: Calculate scalar bounds of Node-6
 Node-1: Cache scalar bounds
 Node-2: Clear backforward cache of symbolic bounds
 Node-3: Clear backforward cache of symbolic bounds
-Node-1: Clear backforward cache of symbolic bounds
+Node-4: Clear forward cache of bounds
 Node-5: Clear forward cache of bounds
 ```
 

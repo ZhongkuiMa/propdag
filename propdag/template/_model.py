@@ -1,5 +1,9 @@
 __docformat__ = "restructuredtext"
-__all__ = ["TModel"]
+__all__ = [
+    "TModel",
+    "clear_fwd_cache",
+    "clear_bwd_cache",
+]
 
 
 from abc import ABC
@@ -56,7 +60,7 @@ def _topo_sort_backward(nodes: list[TNode]) -> dict[TNode, list[TNode]]:
     return backward_sorts
 
 
-def _clear_fwd_cache(cache_counter: dict[TNode, int], nodes: list[TNode]):
+def clear_fwd_cache(cache_counter: dict[TNode, int], nodes: list[TNode]):
     for node in nodes:
         cache_counter[node] -= 1
         if cache_counter[node] == 0:
@@ -64,7 +68,7 @@ def _clear_fwd_cache(cache_counter: dict[TNode, int], nodes: list[TNode]):
             del cache_counter[node]
 
 
-def _clear_bwd_cache(cache_counter: dict[TNode, int], nodes: list[TNode]):
+def clear_bwd_cache(cache_counter: dict[TNode, int], nodes: list[TNode]):
     for node in nodes:
         if node in cache_counter:
             # Some next nodes may not be involved in the backward pass.
@@ -103,9 +107,7 @@ class TModel(ABC):
 
         node = self.nodes[0]
         node.forward()
-
-        if self.arguments.prop_mode == PropMode.BACKWARD:
-            self.backsub(node)
+        # No need to backward for the input node.
 
         for i in range(1, len(self.nodes)):
             node = self.nodes[i]
@@ -114,23 +116,27 @@ class TModel(ABC):
             if self.arguments.prop_mode == PropMode.BACKWARD:
                 self.backsub(node)
 
-            _clear_fwd_cache(cache_counter, node.pre_nodes)
+            clear_fwd_cache(cache_counter, node.pre_nodes)
 
-        _clear_fwd_cache(cache_counter, [node])
+        clear_fwd_cache(cache_counter, [node])
 
     def backsub(self, node: TNode):
         backward_sort = self._all_backward_sorts[node]
+
+        if len(backward_sort) == 1:
+            # No need to do backward pass for the input node.
+            return
+
         cache_counter = {node: len(node.pre_nodes) for node in backward_sort}
-        cache_counter[self.nodes[0]] = 1  # For the input node
 
         node.backward()
 
         for j in range(1, len(backward_sort)):
             node = backward_sort[j]
             node.backward()
-            _clear_bwd_cache(cache_counter, node.next_nodes)
+            clear_bwd_cache(cache_counter, node.next_nodes)
 
-        _clear_bwd_cache(cache_counter, [node])
+        clear_bwd_cache(cache_counter, [node])
 
     @property
     def nodes(self):

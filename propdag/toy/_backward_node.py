@@ -15,9 +15,15 @@ class BackwardToyNode(TNode):
 
     def forward(self):
         print(f"FORWARD {self.name}".center(80, "="))
+        if len(self._pre_nodes) == 0:
+            # For the input node
+            assert self.name in self.cache.bnds
+            print(f"{self.name}: Skip input node")
+            return
+
         self.cache.cur_node = self
 
-        self._build_rlxs()
+        self._fwdprop_symbnds()
 
     def backward(self):
         print(f"BACKWARD {self.name}".center(80, "-"))
@@ -26,8 +32,8 @@ class BackwardToyNode(TNode):
         self._cal_bnds()  # This may bot be valid for all nodes.
 
     def clear_fwd_cache(self):
-        if len(self.next_nodes) > 0:
-            # We need keep the bounds of the last node that has no next nodes.
+        if len(self.next_nodes) > 0 and len(self.pre_nodes) > 0:
+            # We need keep the bounds of the input and output nodes
             print(f"{self.name}: Clear forward cache of bounds")
             del self.cache.bnds[self.name]
 
@@ -43,18 +49,23 @@ class BackwardToyNode(TNode):
     def argument(self) -> ToyArgument:
         return self._argument
 
+    def _build_symbnds(self):
+        print(f"{self.name}: Build symbolic bounds if this is a linear node")
+
     def _build_rlxs(self):
-        print(f"{self.name}: Calculate relaxation if this is non-linear node")
+        print(f"{self.name}: Calculate relaxation if this is a non-linear node")
 
     def _fwdprop_symbnds(self):
-        raise RuntimeError("Forward pass is not supported in backward mode")
+        self._build_rlxs()
+        self._build_symbnds()
 
     def _bwdprop_symbnds(self):
         if self == self.cache.cur_node:
             print(f"{self.name}: Prepare symbolic bounds of {self.name}")
         else:
-            next_names = [next_node.name for next_node in self.next_nodes]
-            print(f"{self.name}: Backsubstitute symbolic bounds of {next_names}")
+            print(
+                f"{self.name}: Backsubstitute symbolic bounds of {self.cache.cur_node.name}"
+            )
         print(f"{self.name}: Cache substitution")
         self.cache.symbnds[self.name] = (f"substitution of {self.name}",)
 

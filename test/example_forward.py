@@ -2,6 +2,7 @@ from propdag import *
 
 if __name__ == "__main__":
     cache = ToyCache()
+    cache.bnds["Node-1"] = ("input bounds",)
     arguments = ToyArgument(prop_mode=PropMode.BACKWARD)
     node1 = BackwardToyNode("Node-1", cache, arguments)
     node2 = BackwardToyNode("Node-2", cache, arguments)

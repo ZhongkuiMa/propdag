@@ -15,6 +15,12 @@ class ForwardToyNode(TNode):
 
     def forward(self):
         print(f"FORWARD {self.name}".center(80, "="))
+        if len(self._pre_nodes) == 0:
+            # For the input node
+            assert self.name in self.cache.bnds
+            print(f"{self.name}: Skip input node")
+            return
+
         self.cache.cur_node = self
 
         self._build_rlxs()

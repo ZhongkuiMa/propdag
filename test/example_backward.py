@@ -2,8 +2,8 @@ from propdag import *
 
 if __name__ == "__main__":
     cache = ToyCache()
+    cache.bnds["Node-1"] = ("input bounds",)
     arguments = ToyArgument(prop_mode=PropMode.BACKWARD)
-
     node1 = BackwardToyNode("Node-1", cache, arguments)
     node2 = BackwardToyNode("Node-2", cache, arguments)
     node3 = BackwardToyNode("Node-3", cache, arguments)
@@ -16,10 +16,10 @@ if __name__ == "__main__":
     node3.pre_nodes = [node1]
     node3.next_nodes = [node4, node5]
     node4.pre_nodes = [node2, node3]
-    node4.next_nodes = [node5]
-    node5.pre_nodes = [node4, node3]
+    node4.next_nodes = [node6]
+    node5.pre_nodes = [node3]
     node5.next_nodes = [node6]
-    node6.pre_nodes = [node5]
+    node6.pre_nodes = [node4, node5]
     nodes_list = [node1, node2, node3, node4, node5, node6]
     # The DAG is:
     #

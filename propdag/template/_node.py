@@ -22,28 +22,49 @@ class TNode(ABC):
         self._next_nodes = []
 
     def forward(self):
-        raise RuntimeError("This method should be instantiated in the child class.")
+        raise RuntimeError(
+            f"This method should be instantiated in {type(self).__name__}."
+        )
 
     def backward(self):
-        raise RuntimeError("This method should be instantiated in the child class.")
+        raise RuntimeError(
+            f"This method should be instantiated in {type(self).__name__}."
+        )
 
     def clear_fwd_cache(self):
-        raise RuntimeError("This method should be instantiated in the child class.")
+        raise RuntimeError(
+            f"This method should be instantiated in {type(self).__name__}."
+        )
 
     def clear_bwd_cache(self):
-        raise RuntimeError("This method should be instantiated in the child class.")
+        raise RuntimeError(
+            f"This method should be instantiated in {type(self).__name__}."
+        )
+
+    def _build_symbnds(self):
+        raise RuntimeError(
+            f"This method should be instantiated in {type(self).__name__}."
+        )
 
     def _build_rlxs(self):
-        raise RuntimeError("This method should be instantiated in the child class.")
+        raise RuntimeError(
+            f"This method should be instantiated in {type(self).__name__}."
+        )
 
     def _fwdprop_symbnds(self):
-        raise RuntimeError("This method should be instantiated in the child class.")
+        raise RuntimeError(
+            f"This method should be instantiated in {type(self).__name__}."
+        )
 
     def _bwdprop_symbnds(self):
-        raise RuntimeError("This method should be instantiated in the child class.")
+        raise RuntimeError(
+            f"This method should be instantiated in {type(self).__name__}."
+        )
 
     def _cal_bnds(self):
-        raise RuntimeError("This method should be instantiated in the child class.")
+        raise RuntimeError(
+            f"This method should be instantiated in {type(self).__name__}."
+        )
 
     @property
     def name(self):
