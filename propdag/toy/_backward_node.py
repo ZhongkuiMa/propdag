@@ -23,13 +23,14 @@ class BackwardToyNode(TNode):
 
         self.cache.cur_node = self
 
-        self._fwdprop_symbnds()
+        self._build_rlx()
+        self._init_symbnd()
 
     def backward(self):
         print(f"BACKWARD {self.name}".center(80, "-"))
 
-        self._bwdprop_symbnds()
-        self._cal_bnds()  # This may bot be valid for all nodes.
+        self._bwdprop_symbnd()
+        self._cal_and_update_cur_node_bnd()  # This may bot be valid for all nodes.
 
     def clear_fwd_cache(self):
         if len(self.next_nodes) > 0 and len(self.pre_nodes) > 0:
@@ -49,17 +50,16 @@ class BackwardToyNode(TNode):
     def argument(self) -> ToyArgument:
         return self._argument
 
-    def _build_symbnds(self):
+    def _init_symbnd(self):
         print(f"{self.name}: Build symbolic bounds if this is a linear node")
 
-    def _build_rlxs(self):
+    def _build_rlx(self):
         print(f"{self.name}: Calculate relaxation if this is a non-linear node")
 
-    def _fwdprop_symbnds(self):
-        self._build_rlxs()
-        self._build_symbnds()
+    def _fwdprop_symbnd(self):
+        raise RuntimeError("Forward pass is not supported in backward mode. ")
 
-    def _bwdprop_symbnds(self):
+    def _bwdprop_symbnd(self):
         if self == self.cache.cur_node:
             print(f"{self.name}: Prepare symbolic bounds of {self.name}")
         else:
@@ -69,7 +69,7 @@ class BackwardToyNode(TNode):
         print(f"{self.name}: Cache substitution")
         self.cache.symbnds[self.name] = (f"substitution of {self.name}",)
 
-    def _cal_bnds(self):
+    def _cal_and_update_cur_node_bnd(self):
         cur_name = self.cache.cur_node.name
         print(f"{self.name}: Calculate scalar bounds of {cur_name}")
         print(f"{self.name}: Cache scalar bounds")

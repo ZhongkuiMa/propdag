@@ -41,27 +41,27 @@ class TNode(ABC):
             f"This method should be instantiated in {type(self).__name__}."
         )
 
-    def _build_symbnds(self):
+    def _init_symbnd(self):
         raise RuntimeError(
             f"This method should be instantiated in {type(self).__name__}."
         )
 
-    def _build_rlxs(self):
+    def _build_rlx(self):
         raise RuntimeError(
             f"This method should be instantiated in {type(self).__name__}."
         )
 
-    def _fwdprop_symbnds(self):
+    def _fwdprop_symbnd(self):
         raise RuntimeError(
             f"This method should be instantiated in {type(self).__name__}."
         )
 
-    def _bwdprop_symbnds(self):
+    def _bwdprop_symbnd(self):
         raise RuntimeError(
             f"This method should be instantiated in {type(self).__name__}."
         )
 
-    def _cal_bnds(self):
+    def _cal_and_update_cur_node_bnd(self):
         raise RuntimeError(
             f"This method should be instantiated in {type(self).__name__}."
         )
