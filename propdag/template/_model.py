@@ -14,12 +14,37 @@ from ._node import TNode
 from ..utils import *
 
 
+def _check_input_output_number(nodes: list[TNode]):
+    n_inputs = 0
+    n_outputs = 0
+    for node in nodes:
+        if len(node.pre_nodes) == 0:
+            n_inputs += 1
+        if len(node.next_nodes) == 0:
+            n_outputs += 1
+
+    # TODO: The future version should support multiple input and output nodes. The
+    #  current version may have errors in the cache handling for multiple inputs and
+    #  outputs
+    if n_inputs != 1:
+        raise ValueError(
+            f"Only one input node is allowed, but {n_inputs} input nodes are found."
+        )
+
+    if n_outputs != 1:
+        raise ValueError(
+            f"Only one output node is allowed, but {n_outputs} output nodes are found."
+        )
+
+
 def _topo_sort_forward(nodes: list[TNode]) -> list[TNode]:
     """
     This is a breadth-first search algorithm to sort the nodes in topological order.
     We need breadth-first search because we do not want to cache the nodes close to
     the input node. In neural networks, a layer close to the input has more dimensions.
     """
+    _check_input_output_number(nodes)
+
     in_degrees = {node: len(node.pre_nodes) for node in nodes}
 
     queue = [node for node in nodes if in_degrees[node] == 0]
@@ -63,7 +88,7 @@ def _topo_sort_backward(nodes: list[TNode]) -> dict[TNode, list[TNode]]:
 def clear_fwd_cache(cache_counter: dict[TNode, int], nodes: list[TNode]):
     for node in nodes:
         cache_counter[node] -= 1
-        if cache_counter[node] == 0:
+        if cache_counter[node] <= 0:  # The output node will be -1
             node.clear_fwd_cache()
             del cache_counter[node]
 
@@ -73,7 +98,7 @@ def clear_bwd_cache(cache_counter: dict[TNode, int], nodes: list[TNode]):
         if node in cache_counter:
             # Some next nodes may not be involved in the backward pass.
             cache_counter[node] -= 1
-            if cache_counter[node] == 0:
+            if cache_counter[node] <= 0:  # The input node will be -1
                 node.clear_bwd_cache()
                 del cache_counter[node]
 
@@ -90,7 +115,8 @@ class TModel(ABC):
     _arguments: TArgument
     _all_backward_sorts: dict[TNode, list[TNode]]
 
-    def __init__(self, nodes: list[TNode]):
+    def __init__(self, nodes: list[TNode], verbose: bool = False):
+        self.verbose = verbose
         self._nodes = _topo_sort_forward(nodes)
         self._cache = nodes[0].cache
         self._arguments = nodes[0].argument
@@ -103,14 +129,17 @@ class TModel(ABC):
 
     def run(self, *args, **kwargs):
         cache_counter = {node: len(node.next_nodes) for node in self._nodes}
-        cache_counter[self.nodes[-1]] = 1  # For the last node
 
         node = self.nodes[0]
+        if self.verbose:
+            print(f"Forward pass {node.name}")
         node.forward()
         # No need to backward for the input node.
 
         for i in range(1, len(self.nodes)):
             node = self.nodes[i]
+            if self.verbose:
+                print(f"Forward pass {node.name}")
             node.forward()
 
             if self.arguments.prop_mode == PropMode.BACKWARD:
@@ -129,10 +158,14 @@ class TModel(ABC):
 
         cache_counter = {node: len(node.pre_nodes) for node in backward_sort}
 
+        if self.verbose:
+            print(f"\tBack-substitute {node.name}")
         node.backward()
 
         for j in range(1, len(backward_sort)):
             node = backward_sort[j]
+            if self.verbose:
+                print(f"\tBack-substitute {node.name}")
             node.backward()
             clear_bwd_cache(cache_counter, node.next_nodes)
 

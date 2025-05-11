@@ -14,7 +14,6 @@ class ForwardToyNode(TNode):
     _next_nodes: list["ForwardToyNode"]
 
     def forward(self):
-        print(f"FORWARD {self.name}".center(80, "="))
         if len(self._pre_nodes) == 0:
             # For the input node
             assert self.name in self.cache.bnds

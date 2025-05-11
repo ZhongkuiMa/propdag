@@ -14,7 +14,6 @@ class BackwardToyNode(TNode):
     _next_nodes: list["BackwardToyNode"]
 
     def forward(self):
-        print(f"FORWARD {self.name}".center(80, "="))
         if len(self._pre_nodes) == 0:
             # For the input node
             assert self.name in self.cache.bnds
@@ -27,8 +26,6 @@ class BackwardToyNode(TNode):
         self._init_symbnd()
 
     def backward(self):
-        print(f"BACKWARD {self.name}".center(80, "-"))
-
         self._bwdprop_symbnd()
         self._cal_and_update_cur_node_bnd()  # This may bot be valid for all nodes.
 

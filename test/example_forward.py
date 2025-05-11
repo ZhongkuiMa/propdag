@@ -44,5 +44,5 @@ if __name__ == "__main__":
     """
     print(dag_str)
 
-    model = ToyModel(nodes_list)
+    model = ToyModel(nodes_list, verbose=True)
     model.run()
