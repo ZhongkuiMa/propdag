@@ -64,23 +64,28 @@ def _topo_sort_forward(nodes: list[TNode]) -> list[TNode]:
 
 
 def _topo_sort_backward(nodes: list[TNode]) -> dict[TNode, list[TNode]]:
+    def dfs(node, visited, result):
+        if node in visited:
+            return
+        visited.add(node)
+        for pre_node in node.pre_nodes:
+            dfs(pre_node, visited, result)
+        result.append(node)  # post-order, ensures pre_node comes before node
+
     backward_sorts = {}
     for node in nodes:
-        # Find all nodes can reach this node.
-        # Iterate all previous nodes as a set.
-        backward_sort = [node]
-        queue = [node]
-        while True:
-            if not queue:
-                break
-            current_node = queue.pop(0)
-            for pre_node in current_node.pre_nodes:
-                if pre_node not in backward_sort:
-                    backward_sort.append(pre_node)
-                    queue.append(pre_node)
+        visited = set()
+        result = []
+        dfs(node, visited, result)
+        backward_sorts[node] = result  # already in correct topological order
 
-        # Because we use list and the reversed nodes, we do not need to order the nodes.
-        backward_sorts[node] = backward_sort
+    for node, backward_sort in backward_sorts.items():
+        backward_sorts[node] = backward_sort[::-1]  # reverse to get the correct order
+
+    # THE FOLLOWING IS FOR DEBUGGING PURPOSES
+    # for node, backward_sort in backward_sorts.items():
+    #     print(node)
+    #     print([n.name for n in backward_sort])
 
     return backward_sorts
 
