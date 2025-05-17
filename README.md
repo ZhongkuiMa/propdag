@@ -37,7 +37,7 @@ Modern neural networks often involve complex structures beyond simple stacks of 
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/propdag.git
+git clone https://github.com/ZhongkuiMa/propdag.git
 cd propdag
 ```
 
