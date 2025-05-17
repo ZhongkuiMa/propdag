@@ -1,3 +1,11 @@
+"""
+Example script demonstrating forward propagation.
+
+This script creates a directed acyclic graph (DAG) with six nodes
+and runs a toy model with forward propagation mode to show how
+properties flow through the graph from input to output.
+"""
+
 from propdag import *
 
 if __name__ == "__main__":

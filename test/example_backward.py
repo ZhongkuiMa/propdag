@@ -1,3 +1,11 @@
+"""
+Example script demonstrating backward property propagation.
+
+This script creates a directed acyclic graph (DAG) with six nodes
+and runs a toy model with backward propagation mode to show how
+properties flow through the graph from output to input.
+"""
+
 from propdag import *
 
 if __name__ == "__main__":

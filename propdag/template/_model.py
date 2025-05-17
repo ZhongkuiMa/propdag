@@ -15,6 +15,13 @@ from ..utils import *
 
 
 def _check_input_output_number(nodes: list[TNode]):
+    """
+    Verify that the graph has exactly one input node and one output node.
+
+    :param nodes: List of nodes in the computational graph
+    :type nodes: list[TNode]
+    :raises ValueError: When number of input or output nodes is not equal to 1
+    """
     n_inputs = 0
     n_outputs = 0
     for node in nodes:
@@ -39,9 +46,17 @@ def _check_input_output_number(nodes: list[TNode]):
 
 def _topo_sort_forward(nodes: list[TNode]) -> list[TNode]:
     """
+    Perform a breadth-first topological sort of nodes.
+
     This is a breadth-first search algorithm to sort the nodes in topological order.
     We need breadth-first search because we do not want to cache the nodes close to
     the input node. In neural networks, a layer close to the input has more dimensions.
+
+    :param nodes: List of nodes to sort
+    :type nodes: list[TNode]
+    :returns: Topologically sorted list of nodes
+    :rtype: list[TNode]
+    :raises ValueError: If the graph contains a cycle
     """
     _check_input_output_number(nodes)
 
@@ -64,6 +79,18 @@ def _topo_sort_forward(nodes: list[TNode]) -> list[TNode]:
 
 
 def _topo_sort_backward(nodes: list[TNode]) -> dict[TNode, list[TNode]]:
+    """
+    Generate backward topological sorts for each node.
+
+    For each node, computes a topological sort of all nodes required
+    for back-substitution from that node.
+
+    :param nodes: List of nodes in the computational graph
+    :type nodes: list[TNode]
+    :returns: Dictionary mapping each node to its backward topological sort
+    :rtype: dict[TNode, list[TNode]]
+    """
+
     def dfs(node, visited, result):
         if node in visited:
             return
@@ -91,6 +118,17 @@ def _topo_sort_backward(nodes: list[TNode]) -> dict[TNode, list[TNode]]:
 
 
 def clear_fwd_cache(cache_counter: dict[TNode, int], nodes: list[TNode]):
+    """
+    Clear forward caches for nodes when they are no longer needed.
+
+    Decrements cache counter for specified nodes and clears caches when
+    counter reaches zero.
+
+    :param cache_counter: Dictionary tracking how many next nodes still need each node's cache
+    :type cache_counter: dict[TNode, int]
+    :param nodes: List of nodes whose cache counters to decrement
+    :type nodes: list[TNode]
+    """
     for node in nodes:
         cache_counter[node] -= 1
         if cache_counter[node] <= 0:  # The output node will be -1
@@ -99,6 +137,17 @@ def clear_fwd_cache(cache_counter: dict[TNode, int], nodes: list[TNode]):
 
 
 def clear_bwd_cache(cache_counter: dict[TNode, int], nodes: list[TNode]):
+    """
+    Clear backward caches for nodes when they are no longer needed.
+
+    Decrements cache counter for specified nodes and clears caches when
+    counter reaches zero.
+
+    :param cache_counter: Dictionary tracking how many previous nodes still need each node's cache
+    :type cache_counter: dict[TNode, int]
+    :param nodes: List of nodes whose cache counters to decrement
+    :type nodes: list[TNode]
+    """
     for node in nodes:
         if node in cache_counter:
             # Some next nodes may not be involved in the backward pass.
@@ -110,9 +159,16 @@ def clear_bwd_cache(cache_counter: dict[TNode, int], nodes: list[TNode]):
 
 class TModel(ABC):
     """
+    Template for computational graph model.
+
     This is a computation graph template. The overall logic is the whole graph and all
     nodes shares the same cache, their methods will operate on this cache. We do not
     consider subgraph, so there is no nested graphs.
+
+    :ivar _nodes: Topologically sorted list of nodes in the graph
+    :ivar _cache: Shared cache instance for all nodes
+    :ivar _arguments: Shared arguments instance for all nodes
+    :ivar _all_backward_sorts: Mapping from nodes to their backward topological sorts
     """
 
     _nodes: list[TNode]
@@ -121,6 +177,15 @@ class TModel(ABC):
     _all_backward_sorts: dict[TNode, list[TNode]]
 
     def __init__(self, nodes: list[TNode], verbose: bool = False):
+        """
+        Initialize a computational graph model.
+
+        :param nodes: List of nodes to include in the model
+        :type nodes: list[TNode]
+        :param verbose: Enable verbose output during execution
+        :type verbose: bool, optional
+        :raises AssertionError: If not all nodes share the same cache and arguments
+        """
         self.verbose = verbose
         self._nodes = _topo_sort_forward(nodes)
         self._cache = nodes[0].cache
@@ -133,6 +198,16 @@ class TModel(ABC):
             self._all_backward_sorts = _topo_sort_backward(self.nodes)
 
     def run(self, *args, **kwargs):
+        """
+        Execute the computational graph.
+
+        Performs forward pass through all nodes in topological order and
+        optionally performs back-substitution based on propagation mode.
+        Intelligently clears caches to optimize memory usage.
+
+        :param args: Positional arguments to pass to the model
+        :param kwargs: Keyword arguments to pass to the model
+        """
         cache_counter = {node: len(node.next_nodes) for node in self._nodes}
 
         node = self.nodes[0]
@@ -155,6 +230,15 @@ class TModel(ABC):
         clear_fwd_cache(cache_counter, [node])
 
     def backsub(self, node: TNode):
+        """
+        Perform back-substitution from a specified node.
+
+        Executes backward passes for all nodes in the backward topological sort
+        starting from the given node.
+
+        :param node: Node to start back-substitution from
+        :type node: TNode
+        """
         backward_sort = self._all_backward_sorts[node]
 
         if len(backward_sort) == 1:
@@ -178,12 +262,30 @@ class TModel(ABC):
 
     @property
     def nodes(self):
+        """
+        Get the nodes in the model.
+
+        :returns: Topologically sorted list of nodes
+        :rtype: list[TNode]
+        """
         return self._nodes
 
     @property
     def cache(self) -> TCache:
+        """
+        Get the shared cache for the model.
+
+        :returns: Cache instance shared by all nodes
+        :rtype: TCache
+        """
         return self._cache
 
     @property
     def arguments(self) -> TArgument:
+        """
+        Get the shared arguments for the model.
+
+        :returns: Arguments instance shared by all nodes
+        :rtype: TArgument
+        """
         return self._arguments
