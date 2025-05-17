@@ -1,5 +1,8 @@
 # propdag: Bound Propagation of Directed Acyclic Computation Graphs for Neural Network Verification
 
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 **propdag** is a flexible and research-oriented framework for developing **bound propagation** methods in neural network verification. 🧠🛡️
 
 ## Overview
@@ -32,6 +35,7 @@ Modern neural networks often involve complex structures beyond simple stacks of 
 
 - **Breadth-First Search (BFS) for topological ordering**: Ensures proper processing order while minimizing cached intermediate results, important for networks with different dimensional layers.
 - **Forward and Backward Propagation**: Supports both forward and backward bound propagation with clean, modular implementation for DAG structures.
+- **Abstract Base Classes**: Provides template classes that can be easily extended for custom implementations.
 
 ## 🔧 Installation
 
