@@ -1,4 +1,4 @@
-# propdag: Bound Propagation of Directed Acyclic Computation Graphs for Neural Network Verification
+# PropDAG: Bound Propagation of Directed Acyclic Computation Graphs for Neural Network Verification
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -6,18 +6,15 @@
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
 
+> Bound propagation has dominated the field of neural network verification over the past years. 🏆 Many pioneering works have been proposed based on this approach, including:
+> [ReLUVal (USENIX Security'18)](https://www.usenix.org/conference/usenixsecurity18/presentation/wang-shiqi)
+> [DeepZ (NeurIPS'18)](https://proceedings.neurips.cc/paper_files/paper/2018/hash/f2f446980d8e971ef3da97af089481c3-Abstract.html)
+> [Fast-Lin (ICML'18)](https://proceedings.mlr.press/v80/weng18a.html)
+> [CROWN (NeurIPS'18)](https://proceedings.neurips.cc/paper/2018/hash/d04863f100d59b3eb688a11f95b0ae60-Abstract.html)
+> [DeepPoly (POPL'19)](https://dl.acm.org/doi/abs/10.1145/3290354)
+> For more detailed discussion, see our blog: [Bound Propagation Approaches in Neural Network Verification](https://zhongkuima.github.io/blogs/bound_prop.html).
+
 **propdag** is a flexible and research-oriented framework for developing **bound propagation** methods in neural network verification. 🧠🛡️
-
-## Overview
-
-Bound propagation has dominated the field of neural network verification over the past years. 🏆 Many pioneering works have been proposed based on this approach, including:
-- [ReLUVal (USENIX Security'18)](https://www.usenix.org/conference/usenixsecurity18/presentation/wang-shiqi)
-- [DeepZ (NeurIPS'18)](https://proceedings.neurips.cc/paper_files/paper/2018/hash/f2f446980d8e971ef3da97af089481c3-Abstract.html)
-- [Fast-Lin (ICML'18)](https://proceedings.mlr.press/v80/weng18a.html)
-- [CROWN (NeurIPS'18)](https://proceedings.neurips.cc/paper/2018/hash/d04863f100d59b3eb688a11f95b0ae60-Abstract.html)
-- [DeepPoly (POPL'19)](https://dl.acm.org/doi/abs/10.1145/3290354)
-
-For more detailed discussion, see our blog: [Bound Propagation Approaches in Neural Network Verification](https://zhongkuima.github.io/blogs/bound_prop.html).
 
 ## 🎯 Why This Framework?
 
@@ -36,7 +33,7 @@ Modern neural networks often involve complex structures beyond simple stacks of 
 
 ### 🔑 Key Implementations
 
-- **Breadth-First Search (BFS) for topological ordering**: Ensures proper processing order while minimizing cached intermediate results, important for networks with different dimensional layers.
+- **Topological ordering with BFS (Breadth-first Search) and DFS (Depth-first Search)**: Ensures proper processing order while minimizing cached intermediate results, important for networks with different dimensional layers. You can choose between BFS and DFS based on your needs.
 - **Forward and Backward Propagation**: Supports both forward and backward bound propagation with clean, modular implementation for DAG structures.
 - **Abstract Base Classes**: Provides template classes that can be easily extended for custom implementations.
 
@@ -49,7 +46,7 @@ cd propdag
 ```
 
 **Requirements:**
-- Python **>= 3.10** (We use Python 3.12 for development)
+- Python >= 3.10 (We use Python 3.12 in development)
 - No additional third-party libraries needed
 
 ## 📦 Usage
