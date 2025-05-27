@@ -94,6 +94,8 @@ class TModel(ABC):
             self._nodes = topo_sort_forward_dfs(nodes, self.verbose)
         elif sort_strategy == "bfs":
             self._nodes = topo_sort_forward_bfs(nodes, self.verbose)
+        else:
+            raise ValueError(f"Unknown sort strategy: {sort_strategy}")
         self._cache = nodes[0].cache
         self._arguments = nodes[0].argument
         for node in nodes[1:]:
