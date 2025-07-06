@@ -1,10 +1,11 @@
 __docformat__ = "restructuredtext"
 __all__ = ["PropMode"]
 
-from enum import Enum, auto
+from enum import IntEnum, unique
 
 
-class PropMode(Enum):
+@unique
+class PropMode(IntEnum):
     """
     Enumeration of propagation modes.
 
@@ -15,5 +16,5 @@ class PropMode(Enum):
     :cvar BACKWARD: Backward propagation mode - properties flow from outputs to inputs
     """
 
-    FORWARD = auto()
-    BACKWARD = auto()
+    FORWARD = 1
+    BACKWARD = 2

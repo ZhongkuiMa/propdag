@@ -71,7 +71,7 @@ class TModel(ABC):
     _arguments: TArgument
     _all_backward_sorts: dict[TNode, list[TNode]]
 
-    verbose: bool = False
+    verbose: bool
 
     def __init__(
         self,
