@@ -1,9 +1,14 @@
 """
-Propogate Directed Acyclic Graph (PropDAG) package.
+PropDAG: Bound propagation for DAG-structured neural networks.
 
-This package provides tools for creating and manipulating directed acyclic graphs for
-use in verification, optimization, and machine learning applications. It includes
-both abstract template classes and concrete implementation examples.
+Provides abstract templates and example implementations for bound propagation
+algorithms in neural network verification. Supports both forward and backward
+propagation through directed acyclic graphs with residual/skip connections.
+
+Main components:
+- template: Abstract base classes (TNode, TModel, TCache, TArgument)
+- toy: Example implementations with verbose logging
+- utils: PropMode enum (FORWARD/BACKWARD)
 """
 
 from .template import *

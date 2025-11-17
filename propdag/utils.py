@@ -7,13 +7,14 @@ from enum import IntEnum, unique
 @unique
 class PropMode(IntEnum):
     """
-    Enumeration of propagation modes.
+    Propagation direction through computation graph.
 
-    Defines the direction in which properties are propagated through a
-    directed acyclic graph (DAG).
+    Defines how bounds propagate through the DAG:
+    - FORWARD: Input bounds -> intermediate layers -> output bounds
+    - BACKWARD: Output bounds + symbolic back-substitution -> tighter input bounds
 
-    :cvar FORWARD: Forward propagation mode - properties flow from inputs to outputs
-    :cvar BACKWARD: Backward propagation mode - properties flow from outputs to inputs
+    :cvar FORWARD: Forward propagation (inputs to outputs)
+    :cvar BACKWARD: Backward propagation with substitution (outputs to inputs)
     """
 
     FORWARD = 1

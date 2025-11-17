@@ -9,16 +9,28 @@ from ._cache import TCache
 
 class TNode(ABC):
     """
-    Abstract base class for nodes in a computational graph.
+    Abstract base class for computational graph nodes.
 
-    Represents a node in a directed acyclic graph (DAG) that performs
-    specific operations during forward and backward passes.
+    Each node represents a layer or operation in a neural network DAG.
+    Nodes must implement forward/backward propagation, bound calculation,
+    and cache management.
 
-    :ivar _name: Name of the node
-    :ivar _cache: Shared cache instance
-    :ivar _argument: Shared arguments instance
-    :ivar _pre_nodes: List of predecessor nodes in the graph
-    :ivar _next_nodes: List of successor nodes in the graph
+    **Key responsibilities:**
+    - Build relaxations for non-linear operations (e.g., ReLU)
+    - Propagate symbolic bounds through the graph
+    - Calculate concrete numerical bounds
+    - Manage caches for intermediate results
+
+    **Graph structure:**
+    - Input nodes: no predecessors, bounds provided externally
+    - Hidden nodes: have predecessors and successors
+    - Output nodes: no successors, final bounds computed here
+
+    :ivar _name: Unique identifier for this node
+    :ivar _cache: Shared cache for bounds and symbolic expressions
+    :ivar _argument: Shared arguments (e.g., verification parameters)
+    :ivar _pre_nodes: Predecessor nodes (inputs to this operation)
+    :ivar _next_nodes: Successor nodes (consumers of this operation)
     """
 
     _name: str
@@ -111,10 +123,17 @@ class TNode(ABC):
 
     def _build_rlx(self):
         """
-        Build relaxation for this node's operation.
+        Build relaxation for non-linear operations.
 
-        This method should be overridden by subclasses to implement
-        operation-specific relaxations.
+        For non-linear activations (ReLU, sigmoid, etc.), compute linear
+        relaxations (upper/lower bounds) that over-approximate the activation.
+
+        Example for ReLU::
+
+            # For x in [l, u]:
+            if l >= 0: relaxation is identity
+            elif u <= 0: relaxation is zero
+            else: compute triangle relaxation
 
         :raises RuntimeError: If not implemented by subclass
         """
@@ -126,8 +145,14 @@ class TNode(ABC):
         """
         Forward propagate symbolic bounds.
 
-        This method should be overridden by subclasses to implement
-        forward propagation of symbolic bounds.
+        Combines symbolic bounds from predecessor nodes according to this
+        node's operation. For linear ops (Conv, FC), composes affine expressions.
+        For non-linear ops, applies relaxations.
+
+        Example::
+
+            # For y = Wx + b:
+            symbolic_y = W * symbolic_x + b
 
         :raises RuntimeError: If not implemented by subclass
         """
@@ -137,10 +162,16 @@ class TNode(ABC):
 
     def _bwdprop_symbnd(self):
         """
-        Backward propagate symbolic bounds.
+        Backward propagate symbolic bounds via substitution.
 
-        This method should be overridden by subclasses to implement
-        backward propagation of symbolic bounds.
+        Back-substitutes symbolic expressions from successor nodes to
+        eliminate intermediate variables, yielding tighter bounds directly
+        in terms of input variables.
+
+        Example::
+
+            # If z = f(y) and y = g(x), substitute:
+            z_symbolic = f(g(x))  # Eliminates y
 
         :raises RuntimeError: If not implemented by subclass
         """

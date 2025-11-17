@@ -8,22 +8,23 @@ from ..template import *
 
 class ForwardToyNode(TNode):
     """
-    Node implementation for forward propagation in toy models.
+    Example node for forward bound propagation.
 
-    This class implements forward-only propagation logic with simple bound
-    calculation and caching behaviors, providing verbose output for educational
-    purposes.
+    Demonstrates forward-only propagation with verbose logging for
+    educational purposes. Shows the flow of:
+    1. Building relaxations (for non-linear layers)
+    2. Forward propagating symbolic bounds
+    3. Calculating concrete bounds
+    4. Cache management
 
-    :ivar _name: Name identifier of the node
-    :type _name: str
-    :ivar _cache: Shared toy cache instance
-    :type _cache: ToyCache
-    :ivar _argument: Shared toy argument instance
-    :type _argument: ToyArgument
-    :ivar _pre_nodes: List of predecessor nodes
-    :type _pre_nodes: list[ForwardToyNode]
-    :ivar _next_nodes: List of successor nodes
-    :type _next_nodes: list[ForwardToyNode]
+    Use this as a template for implementing your own forward propagation
+    algorithms (e.g., CROWN, DeepPoly forward pass).
+
+    :ivar _name: Node identifier (e.g., "Conv1", "ReLU2")
+    :ivar _cache: Shared cache storing bounds and symbolic expressions
+    :ivar _argument: Shared arguments (verification parameters)
+    :ivar _pre_nodes: Input nodes to this operation
+    :ivar _next_nodes: Output nodes consuming this result
     """
 
     _name: str
@@ -34,23 +35,27 @@ class ForwardToyNode(TNode):
 
     def forward(self):
         """
-        Perform forward computation for this node.
+        Execute forward pass for this node.
 
-        For input nodes, validates that bounds are already set.
-        For other nodes, builds relaxations, propagates symbolic bounds,
-        and calculates bounds.
+        **Process:**
+        1. Input nodes: Verify initial bounds already set (provided externally)
+        2. Hidden/output nodes:
+           a. Build relaxation (if non-linear layer like ReLU)
+           b. Forward propagate symbolic bounds from predecessors
+           c. Calculate concrete numerical bounds
         """
+        # Input node: bounds provided externally (e.g., input specification)
         if len(self._pre_nodes) == 0:
-            # For the input node
-            assert self.name in self.cache.bnds
+            assert self.name in self.cache.bnds, f"Input bounds not set for {self.name}"
             print(f"{self.name}: Skip input node")
             return
 
+        # Non-input node: compute bounds via propagation
         self.cache.cur_node = self
 
-        self._build_rlx()
-        self._fwdprop_symbnd()
-        self._cal_and_update_cur_node_bnd()
+        self._build_rlx()                      # Step 1: Relaxation for non-linear ops
+        self._fwdprop_symbnd()                 # Step 2: Symbolic bound propagation
+        self._cal_and_update_cur_node_bnd()   # Step 3: Concrete bound calculation
 
     def backward(self):
         """
@@ -112,17 +117,22 @@ class ForwardToyNode(TNode):
 
     def _fwdprop_symbnd(self):
         """
-        Forward propagate symbolic bounds from predecessor nodes.
+        Forward propagate symbolic bounds from predecessors.
 
-        For input nodes, initializes symbolic bounds.
-        For other nodes, propagates bounds from predecessors.
-        Caches the resulting symbolic bounds.
+        **Logic:**
+        - Input nodes: Initialize symbolic identity (e.g., x = x)
+        - Hidden nodes: Combine predecessor symbolics via this operation
+          Example: For y = Wx + b, symbolic_y = W * symbolic_x + b
+
+        Resulting symbolic expression is cached for later use.
         """
-        if len(self.pre_nodes) == 0:  # For the input node
+        if len(self.pre_nodes) == 0:  # Input node
             print(f"{self.name}: Prepare symbolic bounds of {self.name}")
-        else:
+        else:  # Hidden/output node
             pre_names = [pre_node.name for pre_node in self.pre_nodes]
             print(f"{self.name}: Forward propagate symbolic bounds of {pre_names}")
+
+        # Cache symbolic expression (tuple placeholder in toy example)
         print(f"{self.name}: Cache symbolic bounds")
         self.cache.symbnds[self.name] = ("symbolic bounds",)
 
