@@ -82,7 +82,9 @@ def topo_sort_forward_bfs(nodes: list[TNode], verbose: bool = False) -> list[TNo
     """
     _check_input_output_number(nodes, verbose)
 
-    in_degrees = {node: len(node.pre_nodes) for node in nodes}
+    # Use unique pre_nodes count to handle cases like x * x where
+    # the same input appears twice in pre_nodes
+    in_degrees = {node: len(set(node.pre_nodes)) for node in nodes}
 
     queue = [node for node in nodes if in_degrees[node] == 0]
     sorted_nodes = []
