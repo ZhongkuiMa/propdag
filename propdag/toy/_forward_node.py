@@ -1,12 +1,12 @@
 __docformat__ = "restructuredtext"
 __all__ = ["ForwardToyNode"]
 
-from ._arguments import *
-from ._cache import *
-from ..template import *
+from propdag.propdag.template import TNode
+from propdag.propdag.toy._arguments import ToyArgument
+from propdag.propdag.toy._cache import ToyCache
 
 
-class ForwardToyNode(TNode):
+class ForwardToyNode(TNode[ToyCache, ToyArgument]):
     """
     Example node for forward bound propagation.
 
@@ -27,11 +27,7 @@ class ForwardToyNode(TNode):
     :ivar _next_nodes: Output nodes consuming this result
     """
 
-    _name: str
-    _cache: ToyCache
-    _argument: ToyArgument
-    _pre_nodes: list["ForwardToyNode"]
-    _next_nodes: list["ForwardToyNode"]
+    # Inherited from TNode[ToyCache, ToyArgument]
 
     def forward(self):
         """
@@ -53,9 +49,9 @@ class ForwardToyNode(TNode):
         # Non-input node: compute bounds via propagation
         self.cache.cur_node = self
 
-        self._build_rlx()                      # Step 1: Relaxation for non-linear ops
-        self._fwdprop_symbnd()                 # Step 2: Symbolic bound propagation
-        self._cal_and_update_cur_node_bnd()   # Step 3: Concrete bound calculation
+        self._build_rlx()  # Step 1: Relaxation for non-linear ops
+        self._fwdprop_symbnd()  # Step 2: Symbolic bound propagation
+        self._cal_and_update_cur_node_bnd()  # Step 3: Concrete bound calculation
 
     def backward(self):
         """
@@ -87,25 +83,7 @@ class ForwardToyNode(TNode):
         """
         raise RuntimeError("Backward pass is not supported in forward mode")
 
-    @property
-    def cache(self) -> ToyCache:
-        """
-        Get the toy cache instance.
-
-        :returns: The shared toy cache
-        :rtype: ToyCache
-        """
-        return self._cache
-
-    @property
-    def argument(self) -> ToyArgument:
-        """
-        Get the toy argument instance.
-
-        :returns: The shared toy arguments
-        :rtype: ToyArgument
-        """
-        return self._argument
+    # Inherited properties: cache, argument (avoid override issues)
 
     def _build_rlx(self):
         """

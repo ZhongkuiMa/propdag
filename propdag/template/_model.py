@@ -7,16 +7,21 @@ __all__ = [
 
 
 from abc import ABC
+from collections.abc import Sequence
 from typing import Literal
 
-from ._arguments import TArgument
-from ._cache import TCache
-from ._node import TNode
-from ._sort import *
-from ..utils import *
+from propdag.propdag.custom_types import NodeType
+from propdag.propdag.template._arguments import TArgument
+from propdag.propdag.template._cache import TCache
+from propdag.propdag.template._sort import (
+    topo_sort_backward,
+    topo_sort_forward_bfs,
+    topo_sort_forward_dfs,
+)
+from propdag.propdag.utils import PropMode
 
 
-def clear_fwd_cache(cache_counter: dict[TNode, int], nodes: list[TNode]):
+def clear_fwd_cache(cache_counter: dict[NodeType, int], nodes: Sequence[NodeType]):
     """
     Clear forward caches for nodes when they are no longer needed.
 
@@ -24,9 +29,7 @@ def clear_fwd_cache(cache_counter: dict[TNode, int], nodes: list[TNode]):
     counter reaches zero.
 
     :param cache_counter: Dictionary tracking how many next nodes still need each node's cache
-    :type cache_counter: dict[TNode, int]
     :param nodes: List of nodes whose cache counters to decrement
-    :type nodes: list[TNode]
     """
     for node in nodes:
         cache_counter[node] -= 1
@@ -35,7 +38,7 @@ def clear_fwd_cache(cache_counter: dict[TNode, int], nodes: list[TNode]):
             del cache_counter[node]
 
 
-def clear_bwd_cache(cache_counter: dict[TNode, int], nodes: list[TNode]):
+def clear_bwd_cache(cache_counter: dict[NodeType, int], nodes: Sequence[NodeType]):
     """
     Clear backward caches for nodes when they are no longer needed.
 
@@ -43,9 +46,7 @@ def clear_bwd_cache(cache_counter: dict[TNode, int], nodes: list[TNode]):
     counter reaches zero.
 
     :param cache_counter: Dictionary tracking how many previous nodes still need each node's cache
-    :type cache_counter: dict[TNode, int]
     :param nodes: List of nodes whose cache counters to decrement
-    :type nodes: list[TNode]
     """
     for node in nodes:
         if node in cache_counter:
@@ -65,27 +66,25 @@ class TModel(ABC):
     consider subgraph, so there is no nested graphs.
     """
 
-    _nodes: list[TNode]
+    _nodes: list[NodeType]
     _sort_strategy: Literal["dfs", "bfs"]
     _cache: TCache
     _arguments: TArgument
-    _all_backward_sorts: dict[TNode, list[TNode]]
+    _all_backward_sorts: dict[NodeType, list[NodeType]]
 
     verbose: bool
 
     def __init__(
         self,
-        nodes: list[TNode],
+        nodes: Sequence[NodeType],
         sort_strategy: Literal["dfs", "bfs"] = "bfs",
         verbose: bool = False,
     ):
         """
         Initialize a computational graph model.
 
-        :param nodes: List of nodes to include in the model
-        :type nodes: list[TNode]
+        :param nodes: Sequence of nodes to include in the model
         :param verbose: Enable verbose output during execution
-        :type verbose: bool, optional
         :raises AssertionError: If not all nodes share the same cache and arguments
         """
         self.verbose = verbose
@@ -137,7 +136,7 @@ class TModel(ABC):
 
         clear_fwd_cache(cache_counter, [node])
 
-    def backsub(self, node: TNode):
+    def backsub(self, node: NodeType):
         """
         Perform back-substitution from a specified node.
 
@@ -145,7 +144,6 @@ class TModel(ABC):
         starting from the given node.
 
         :param node: Node to start back-substitution from
-        :type node: TNode
         """
         backward_sort = self._all_backward_sorts[node]
 
@@ -174,17 +172,15 @@ class TModel(ABC):
         Get the sorting strategy used in the model.
 
         :returns: Sorting strategy (either 'dfs' or 'bfs')
-        :rtype: str
         """
         return self._sort_strategy
 
     @property
-    def nodes(self):
+    def nodes(self) -> list[NodeType]:
         """
         Get the nodes in the model.
 
         :returns: Topologically sorted list of nodes
-        :rtype: list[TNode]
         """
         return self._nodes
 
@@ -194,7 +190,6 @@ class TModel(ABC):
         Get the shared cache for the model.
 
         :returns: Cache instance shared by all nodes
-        :rtype: TCache
         """
         return self._cache
 
@@ -204,6 +199,5 @@ class TModel(ABC):
         Get the shared arguments for the model.
 
         :returns: Arguments instance shared by all nodes
-        :rtype: TArgument
         """
         return self._arguments

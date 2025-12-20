@@ -6,8 +6,8 @@ template module, demonstrating both forward and backward propagation modes with
 detailed logging output.
 """
 
-from ._arguments import *
-from ._backward_node import *
-from ._cache import *
-from ._forward_node import *
-from ._model import *
+from propdag.propdag.toy._arguments import *
+from propdag.propdag.toy._backward_node import *
+from propdag.propdag.toy._cache import *
+from propdag.propdag.toy._forward_node import *
+from propdag.propdag.toy._model import *

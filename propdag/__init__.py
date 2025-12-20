@@ -11,6 +11,6 @@ Main components:
 - utils: PropMode enum (FORWARD/BACKWARD)
 """
 
-from .template import *
-from .toy import *
-from .utils import *
+from propdag.propdag.template import *
+from propdag.propdag.toy import *
+from propdag.propdag.utils import *

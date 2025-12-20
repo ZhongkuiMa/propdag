@@ -6,4 +6,4 @@ creating and analyzing directed acyclic graphs in
 verification and machine learning applications.
 """
 
-from .propdag import *
+from propdag.propdag import *

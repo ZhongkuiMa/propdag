@@ -1,7 +1,7 @@
 __docformat__ = "restructuredtext"
 __all__ = ["ToyArgument"]
 
-from ..template import *
+from propdag.propdag.template import TArgument
 
 
 class ToyArgument(TArgument):
@@ -11,5 +11,3 @@ class ToyArgument(TArgument):
     A simple implementation of the TArgument abstract class that inherits the
     propagation mode property without adding additional parameters.
     """
-
-    pass

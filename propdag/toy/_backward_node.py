@@ -1,12 +1,12 @@
 __docformat__ = "restructuredtext"
 __all__ = ["BackwardToyNode"]
 
-from ._arguments import *
-from ._cache import *
-from ..template import *
+from propdag.propdag.template import TNode
+from propdag.propdag.toy._arguments import ToyArgument
+from propdag.propdag.toy._cache import ToyCache
 
 
-class BackwardToyNode(TNode):
+class BackwardToyNode(TNode[ToyCache, ToyArgument]):
     """
     Node implementation for backward propagation in toy models.
 
@@ -14,22 +14,13 @@ class BackwardToyNode(TNode):
     and substitution, providing verbose output for educational purposes.
 
     :ivar _name: Name identifier of the node
-    :type _name: str
     :ivar _cache: Shared toy cache instance
-    :type _cache: ToyCache
     :ivar _argument: Shared toy argument instance
-    :type _argument: ToyArgument
     :ivar _pre_nodes: List of predecessor nodes
-    :type _pre_nodes: list[BackwardToyNode]
     :ivar _next_nodes: List of successor nodes
-    :type _next_nodes: list[BackwardToyNode]
     """
 
-    _name: str
-    _cache: ToyCache
-    _argument: ToyArgument
-    _pre_nodes: list["BackwardToyNode"]
-    _next_nodes: list["BackwardToyNode"]
+    # Inherited from TNode[ToyCache, ToyArgument]
 
     def forward(self):
         """
@@ -79,25 +70,7 @@ class BackwardToyNode(TNode):
         print(f"{self.name}: Clear backforward cache of symbolic bounds")
         del self.cache.symbnds[self.name]
 
-    @property
-    def cache(self) -> ToyCache:
-        """
-        Get the toy cache instance.
-
-        :returns: The shared toy cache
-        :rtype: ToyCache
-        """
-        return self._cache
-
-    @property
-    def argument(self) -> ToyArgument:
-        """
-        Get the toy argument instance.
-
-        :returns: The shared toy arguments
-        :rtype: ToyArgument
-        """
-        return self._argument
+    # Inherited properties: cache, argument (avoid override issues)
 
     def _init_symbnd(self):
         """
@@ -131,12 +104,11 @@ class BackwardToyNode(TNode):
         For other nodes, performs back-substitution to propagate bounds.
         Caches the resulting symbolic expressions.
         """
+        assert self.cache.cur_node is not None, "cur_node must be set before backward propagation"
         if self == self.cache.cur_node:
             print(f"{self.name}: Prepare symbolic bounds of {self.name}")
         else:
-            print(
-                f"{self.name}: Backsubstitute symbolic bounds of {self.cache.cur_node.name}"
-            )
+            print(f"{self.name}: Backsubstitute symbolic bounds of {self.cache.cur_node.name}")
         print(f"{self.name}: Cache substitution")
         self.cache.symbnds[self.name] = (f"substitution of {self.name}",)
 
@@ -147,6 +119,7 @@ class BackwardToyNode(TNode):
         Computes concrete numerical bounds based on symbolic bounds from backward
         propagation and updates the cache.
         """
+        assert self.cache.cur_node is not None, "cur_node must be set before bound calculation"
         cur_name = self.cache.cur_node.name
         print(f"{self.name}: Calculate scalar bounds of {cur_name}")
         print(f"{self.name}: Cache scalar bounds")

@@ -2,12 +2,13 @@ __docformat__ = "restructuredtext"
 __all__ = ["TNode"]
 
 from abc import ABC
+from collections.abc import Sequence
+from typing import Generic
 
-from ._arguments import TArgument
-from ._cache import TCache
+from propdag.propdag.custom_types import ArgumentType, CacheType
 
 
-class TNode(ABC):
+class TNode(ABC, Generic[CacheType, ArgumentType]):
     """
     Abstract base class for computational graph nodes.
 
@@ -34,21 +35,18 @@ class TNode(ABC):
     """
 
     _name: str
-    _cache: TCache
-    _argument: TArgument
-    _pre_nodes: list["TNode"]
-    _next_nodes: list["TNode"]
+    _cache: CacheType
+    _argument: ArgumentType
+    _pre_nodes: list["TNode[CacheType, ArgumentType]"]
+    _next_nodes: list["TNode[CacheType, ArgumentType]"]
 
-    def __init__(self, name: str, cache: TCache, argument: TArgument):
+    def __init__(self, name: str, cache: CacheType, argument: ArgumentType):
         """
         Initialize a node in the computational graph.
 
         :param name: Name of the node
-        :type name: str
         :param cache: Shared cache instance
-        :type cache: TCache
         :param argument: Shared arguments instance
-        :type argument: TArgument
         """
         self._name = name
         self._cache = cache
@@ -65,9 +63,7 @@ class TNode(ABC):
 
         :raises RuntimeError: If not implemented by subclass
         """
-        raise RuntimeError(
-            f"This method should be instantiated in {type(self).__name__}."
-        )
+        raise RuntimeError(f"This method should be instantiated in {type(self).__name__}.")
 
     def backward(self):
         """
@@ -78,9 +74,7 @@ class TNode(ABC):
 
         :raises RuntimeError: If not implemented by subclass
         """
-        raise RuntimeError(
-            f"This method should be instantiated in {type(self).__name__}."
-        )
+        raise RuntimeError(f"This method should be instantiated in {type(self).__name__}.")
 
     def clear_fwd_cache(self):
         """
@@ -91,9 +85,7 @@ class TNode(ABC):
 
         :raises RuntimeError: If not implemented by subclass
         """
-        raise RuntimeError(
-            f"This method should be instantiated in {type(self).__name__}."
-        )
+        raise RuntimeError(f"This method should be instantiated in {type(self).__name__}.")
 
     def clear_bwd_cache(self):
         """
@@ -104,9 +96,7 @@ class TNode(ABC):
 
         :raises RuntimeError: If not implemented by subclass
         """
-        raise RuntimeError(
-            f"This method should be instantiated in {type(self).__name__}."
-        )
+        raise RuntimeError(f"This method should be instantiated in {type(self).__name__}.")
 
     def _init_symbnd(self):
         """
@@ -117,9 +107,7 @@ class TNode(ABC):
 
         :raises RuntimeError: If not implemented by subclass
         """
-        raise RuntimeError(
-            f"This method should be instantiated in {type(self).__name__}."
-        )
+        raise RuntimeError(f"This method should be instantiated in {type(self).__name__}.")
 
     def _build_rlx(self):
         """
@@ -137,9 +125,7 @@ class TNode(ABC):
 
         :raises RuntimeError: If not implemented by subclass
         """
-        raise RuntimeError(
-            f"This method should be instantiated in {type(self).__name__}."
-        )
+        raise RuntimeError(f"This method should be instantiated in {type(self).__name__}.")
 
     def _fwdprop_symbnd(self):
         """
@@ -156,9 +142,7 @@ class TNode(ABC):
 
         :raises RuntimeError: If not implemented by subclass
         """
-        raise RuntimeError(
-            f"This method should be instantiated in {type(self).__name__}."
-        )
+        raise RuntimeError(f"This method should be instantiated in {type(self).__name__}.")
 
     def _bwdprop_symbnd(self):
         """
@@ -175,9 +159,7 @@ class TNode(ABC):
 
         :raises RuntimeError: If not implemented by subclass
         """
-        raise RuntimeError(
-            f"This method should be instantiated in {type(self).__name__}."
-        )
+        raise RuntimeError(f"This method should be instantiated in {type(self).__name__}.")
 
     def _cal_and_update_cur_node_bnd(self):
         """
@@ -188,9 +170,7 @@ class TNode(ABC):
 
         :raises RuntimeError: If not implemented by subclass
         """
-        raise RuntimeError(
-            f"This method should be instantiated in {type(self).__name__}."
-        )
+        raise RuntimeError(f"This method should be instantiated in {type(self).__name__}.")
 
     @property
     def name(self):
@@ -198,86 +178,77 @@ class TNode(ABC):
         Get node name.
 
         :returns: Name of this node
-        :rtype: str
         """
         return self._name
 
     @property
-    def cache(self) -> TCache:
+    def cache(self) -> CacheType:
         """
         Get shared cache instance.
 
         :returns: Cache instance shared across nodes
-        :rtype: TCache
         """
         return self._cache
 
     @cache.setter
-    def cache(self, value: TCache):
+    def cache(self, value: CacheType):
         """
         Set shared cache instance.
 
         :param value: Cache instance to use
-        :type value: TCache
         """
         self._cache = value
 
     @property
-    def argument(self) -> TArgument:
+    def argument(self) -> ArgumentType:
         """
         Get shared arguments instance.
 
         :returns: Arguments instance shared across nodes
-        :rtype: TArgument
         """
         return self._argument
 
     @argument.setter
-    def argument(self, value: TArgument):
+    def argument(self, value: ArgumentType):
         """
         Set shared arguments instance.
 
         :param value: Arguments instance to use
-        :type value: TArgument
         """
         self._argument = value
 
     @property
-    def pre_nodes(self) -> list["TNode"]:
+    def pre_nodes(self) -> Sequence["TNode[CacheType, ArgumentType]"]:
         """
         Get predecessor nodes.
 
-        :returns: List of nodes that precede this node
-        :rtype: list[TNode]
+        :returns: Sequence of nodes that precede this node
         """
         return self._pre_nodes
 
     @pre_nodes.setter
-    def pre_nodes(self, value: list["TNode"]):
+    def pre_nodes(self, value: list["TNode[CacheType, ArgumentType]"]):
         """
         Set predecessor nodes.
 
         :param value: List of nodes that precede this node
-        :type value: list[TNode]
         """
         self._pre_nodes = value
 
     @property
-    def next_nodes(self) -> list["TNode"]:
+    def next_nodes(self) -> Sequence["TNode[CacheType, ArgumentType]"]:
         """
         Get successor nodes.
 
-        :returns: List of nodes that succeed this node
-        :rtype: list[TNode]
+        :returns: Sequence of nodes that succeed this node
         """
         return self._next_nodes
 
     @next_nodes.setter
-    def next_nodes(self, value: list["TNode"]):
+    def next_nodes(self, value: list["TNode[CacheType, ArgumentType]"]):
         """
         Set successor nodes.
 
         :param value: List of nodes that succeed this node
-        :type value: list[TNode]
         """
         self._next_nodes = value

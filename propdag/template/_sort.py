@@ -1,15 +1,17 @@
 __docformat__ = "restructuredtext"
 __all__ = ["topo_sort_forward_bfs", "topo_sort_forward_dfs", "topo_sort_backward"]
 
-from ._node import TNode
+from collections.abc import Sequence
+
+from propdag.propdag.custom_types import NodeType
 
 
-def _check_input_output_number(nodes: list[TNode], verbose: bool = False):
+def _check_input_output_number(nodes: Sequence[NodeType], verbose: bool = False):
     """
     Verify that the graph has exactly one input node and one output node.
 
-    :param nodes: List of nodes in the computational graph
-    :type nodes: list[TNode]
+    :param nodes: Sequence of nodes in the computational graph
+    :param verbose: Whether to print diagnostics
     :raises ValueError: When number of input or output nodes is not equal to 1
     """
     n_inputs = 0
@@ -24,7 +26,7 @@ def _check_input_output_number(nodes: list[TNode], verbose: bool = False):
         print(f"The DAG graph has {n_inputs} inputs and {n_outputs} outputs.")
 
 
-def topo_sort_forward_dfs(nodes: list[TNode], verbose: bool = False) -> list[TNode]:
+def topo_sort_forward_dfs(nodes: Sequence[NodeType], verbose: bool = False) -> list[NodeType]:
     """
     Perform a DFS (depth-first search) for topological sort of nodes.
 
@@ -32,10 +34,9 @@ def topo_sort_forward_dfs(nodes: list[TNode], verbose: bool = False) -> list[TNo
     Sometimes, we need depth-first search because we want to cache the nodes close to
     the input node. If a layer close to the input has fewer dimensions.
 
-    :param nodes: List of nodes to sort
-    :type nodes: list[TNode]
+    :param nodes: Sequence of nodes to sort
+    :param verbose: Whether to print diagnostics
     :return: Topologically sorted list of nodes
-    :rtype: list[TNode]
     :raises ValueError: If the graph contains a cycle
     """
     _check_input_output_number(nodes, verbose)
@@ -66,7 +67,7 @@ def topo_sort_forward_dfs(nodes: list[TNode], verbose: bool = False) -> list[TNo
     return sorted_nodes[::-1]
 
 
-def topo_sort_forward_bfs(nodes: list[TNode], verbose: bool = False) -> list[TNode]:
+def topo_sort_forward_bfs(nodes: Sequence[NodeType], verbose: bool = False) -> list[NodeType]:
     """
     Perform a BFS (breadth-first search) for topological sort of nodes.
 
@@ -74,20 +75,19 @@ def topo_sort_forward_bfs(nodes: list[TNode], verbose: bool = False) -> list[TNo
     We need breadth-first search because we do not want to cache the nodes close to
     the input node. In neural networks, a layer close to the input has more dimensions.
 
-    :param nodes: List of nodes to sort
-    :type nodes: list[TNode]
-    :returns: Topologically sorted list of nodes
-    :rtype: list[TNode]
+    :param nodes: Sequence of nodes to sort
+    :param verbose: Whether to print diagnostics
+    :return: Topologically sorted list of nodes
     :raises ValueError: If the graph contains a cycle
     """
     _check_input_output_number(nodes, verbose)
 
     # Use unique pre_nodes count to handle cases like x * x where
     # the same input appears twice in pre_nodes
-    in_degrees = {node: len(set(node.pre_nodes)) for node in nodes}
+    in_degrees: dict[NodeType, int] = {node: len(set(node.pre_nodes)) for node in nodes}
 
-    queue = [node for node in nodes if in_degrees[node] == 0]
-    sorted_nodes = []
+    queue: list[NodeType] = [node for node in nodes if in_degrees[node] == 0]
+    sorted_nodes: list[NodeType] = []
     while queue:
         node = queue.pop(0)
         sorted_nodes.append(node)
@@ -102,9 +102,7 @@ def topo_sort_forward_bfs(nodes: list[TNode], verbose: bool = False) -> list[TNo
     return sorted_nodes
 
 
-def topo_sort_backward(
-    nodes: list[TNode], verbose: bool = False
-) -> dict[TNode, list[TNode]]:
+def topo_sort_backward(nodes: Sequence[NodeType], verbose: bool = False) -> dict[NodeType, list[NodeType]]:
     """
     Generate backward topological sorts for each node.
 
@@ -112,10 +110,9 @@ def topo_sort_backward(
     for back-substitution from that node.
     Here, the DFS (Depth-First Search) algorithm is used to traverse the graph.
 
-    :param nodes: List of nodes in the computational graph
-    :type nodes: list[TNode]
-    :returns: Dictionary mapping each node to its backward topological sort
-    :rtype: dict[TNode, list[TNode]]
+    :param nodes: Sequence of nodes in the computational graph
+    :param verbose: Whether to print diagnostics
+    :return: Dictionary mapping each node to its backward topological sort
     """
 
     def dfs(node, visited, result):
@@ -128,8 +125,8 @@ def topo_sort_backward(
 
     backward_sorts = {}
     for node in nodes:
-        visited = set()
-        result = []
+        visited: set[NodeType] = set()
+        result: list[NodeType] = []
         dfs(node, visited, result)
         backward_sorts[node] = result  # already in correct topological order
 

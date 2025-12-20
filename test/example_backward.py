@@ -6,7 +6,7 @@ and runs a toy model with backward propagation mode to show how
 properties flow through the graph from output to input.
 """
 
-from propdag import *
+from propdag import BackwardToyNode, PropMode, ToyArgument, ToyCache, ToyModel
 
 if __name__ == "__main__":
     cache = ToyCache()

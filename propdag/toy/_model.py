@@ -1,9 +1,7 @@
-__docformat__ = "restructured"
+__docformat__ = "restructuredtext"
 __all__ = ["ToyModel"]
 
-from ._arguments import ToyArgument
-from ._cache import ToyCache
-from ..template import *
+from propdag.propdag.template import TModel
 
 
 class ToyModel(TModel):
@@ -14,19 +12,10 @@ class ToyModel(TModel):
     toy versions of cache and arguments.
 
     :ivar _nodes: List of nodes in topological order
-    :type _nodes: list[TNode]
     :ivar _cache: Toy cache instance shared among all nodes
-    :type _cache: ToyCache
     :ivar _arguments: Toy arguments instance shared among all nodes
-    :type _arguments: ToyArgument
     :ivar _all_backward_sorts: Mapping of nodes to their backward topological sorts
-    :type _all_backward_sorts: dict[TNode, list[TNode]]
     """
-
-    _nodes: list[TNode]
-    _cache: ToyCache
-    _arguments: ToyArgument
-    _all_backward_sorts: dict[TNode, list[TNode]]
 
     def run(self):
         """
