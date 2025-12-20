@@ -102,7 +102,9 @@ def topo_sort_forward_bfs(nodes: Sequence[NodeType], verbose: bool = False) -> l
     return sorted_nodes
 
 
-def topo_sort_backward(nodes: Sequence[NodeType], verbose: bool = False) -> dict[NodeType, list[NodeType]]:
+def topo_sort_backward(
+    nodes: Sequence[NodeType], verbose: bool = False
+) -> dict[NodeType, list[NodeType]]:
     """
     Generate backward topological sorts for each node.
 
