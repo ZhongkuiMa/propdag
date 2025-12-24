@@ -96,6 +96,9 @@ ignore = [
     "D104",    # Missing public package docstring
     "TD002",   # Missing TODO author
     "TD003",   # Missing TODO link
+    "T201",    # Print statements - used in debugging/tests
+    "PLR0913", # Too many arguments - valid design choice
+    "ERA001",  # Commented code - intentional for reference
 ]
 
 [tool.ruff.lint.per-file-ignores]
