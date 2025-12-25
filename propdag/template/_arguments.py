@@ -3,7 +3,7 @@ __all__ = ["TArgument"]
 
 from dataclasses import dataclass
 
-from propdag.propdag.utils import PropMode
+from propdag.utils import PropMode
 
 
 @dataclass(frozen=True, slots=True)

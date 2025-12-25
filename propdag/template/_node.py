@@ -5,7 +5,7 @@ from abc import ABC
 from collections.abc import Sequence
 from typing import Generic
 
-from propdag.propdag.custom_types import ArgumentType, CacheType
+from propdag.custom_types import ArgumentType, CacheType
 
 
 class TNode(ABC, Generic[CacheType, ArgumentType]):

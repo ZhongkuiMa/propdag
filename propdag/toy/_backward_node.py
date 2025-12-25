@@ -1,9 +1,9 @@
 __docformat__ = "restructuredtext"
 __all__ = ["BackwardToyNode"]
 
-from propdag.propdag.template import TNode
-from propdag.propdag.toy._arguments import ToyArgument
-from propdag.propdag.toy._cache import ToyCache
+from propdag.template import TNode
+from propdag.toy._arguments import ToyArgument
+from propdag.toy._cache import ToyCache
 
 
 class BackwardToyNode(TNode[ToyCache, ToyArgument]):

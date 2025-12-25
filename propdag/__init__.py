@@ -11,7 +11,7 @@ Main components:
 - utils: PropMode enum (FORWARD/BACKWARD)
 """
 
-from propdag.propdag.template import (
+from propdag.template import (
     TArgument,
     TCache,
     TModel,
@@ -20,7 +20,7 @@ from propdag.propdag.template import (
     topo_sort_forward_bfs,
     topo_sort_forward_dfs,
 )
-from propdag.propdag.utils import PropMode
+from propdag.utils import PropMode
 
 __all__ = [
     # Template exports

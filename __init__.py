@@ -6,7 +6,7 @@ creating and analyzing directed acyclic graphs in
 verification and machine learning applications.
 """
 
-from propdag.propdag import (
+from propdag import (
     PropMode,
     TArgument,
     TCache,

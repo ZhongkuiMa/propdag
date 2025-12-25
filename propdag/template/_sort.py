@@ -3,7 +3,7 @@ __all__ = ["topo_sort_forward_bfs", "topo_sort_forward_dfs", "topo_sort_backward
 
 from collections.abc import Sequence
 
-from propdag.propdag.custom_types import NodeType
+from propdag.custom_types import NodeType
 
 
 def _check_input_output_number(nodes: Sequence[NodeType], verbose: bool = False):

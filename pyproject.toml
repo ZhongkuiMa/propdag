@@ -32,8 +32,10 @@ dev = [
     "pyright>=1.1.0",
 ]
 
-[tool.setuptools]
-packages = ["propdag"]
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["propdag*"]
+exclude = ["tests*", "docs*"]
 
 [tool.setuptools.package-data]
 propdag = ["py.typed"]

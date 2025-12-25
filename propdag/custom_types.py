@@ -9,11 +9,11 @@ __all__ = [
 
 from typing import TYPE_CHECKING, TypeAlias, TypeVar
 
-from propdag.propdag.template._arguments import TArgument
-from propdag.propdag.template._cache import TCache
+from propdag.template._arguments import TArgument
+from propdag.template._cache import TCache
 
 if TYPE_CHECKING:
-    from propdag.propdag.template._node import TNode
+    from propdag.template._node import TNode
 
 # Type variables for generic components
 CacheType = TypeVar("CacheType", bound=TCache)

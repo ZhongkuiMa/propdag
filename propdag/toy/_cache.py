@@ -4,7 +4,7 @@ __all__ = ["ToyCache"]
 from collections import OrderedDict
 from dataclasses import dataclass, field
 
-from propdag.propdag.template import TCache, TNode
+from propdag.template import TCache, TNode
 
 
 @dataclass(slots=True)

@@ -6,11 +6,11 @@ template module, demonstrating both forward and backward propagation modes with
 detailed logging output.
 """
 
-from propdag.propdag.toy._arguments import ToyArgument
-from propdag.propdag.toy._backward_node import BackwardToyNode
-from propdag.propdag.toy._cache import ToyCache
-from propdag.propdag.toy._forward_node import ForwardToyNode
-from propdag.propdag.toy._model import ToyModel
+from propdag.toy._arguments import ToyArgument
+from propdag.toy._backward_node import BackwardToyNode
+from propdag.toy._cache import ToyCache
+from propdag.toy._forward_node import ForwardToyNode
+from propdag.toy._model import ToyModel
 
 __all__ = [
     "ToyArgument",

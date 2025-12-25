@@ -10,15 +10,15 @@ from abc import ABC
 from collections.abc import Sequence
 from typing import Literal
 
-from propdag.propdag.custom_types import NodeType
-from propdag.propdag.template._arguments import TArgument
-from propdag.propdag.template._cache import TCache
-from propdag.propdag.template._sort import (
+from propdag.custom_types import NodeType
+from propdag.template._arguments import TArgument
+from propdag.template._cache import TCache
+from propdag.template._sort import (
     topo_sort_backward,
     topo_sort_forward_bfs,
     topo_sort_forward_dfs,
 )
-from propdag.propdag.utils import PropMode
+from propdag.utils import PropMode
 
 
 def clear_fwd_cache(cache_counter: dict[NodeType, int], nodes: Sequence[NodeType]):
