@@ -95,7 +95,6 @@ ignore = [
     "SIM108",  # Use ternary operator
     "FBT001",  # Boolean positional arg
     "FBT002",  # Boolean default positional arg
-    "D100",    # Missing module docstring
     "D104",    # Missing public package docstring
     "TD002",   # Missing TODO author
     "TD003",   # Missing TODO link
@@ -105,10 +104,10 @@ ignore = [
 ]
 
 [tool.ruff.lint.per-file-ignores]
-"__init__.py" = ["F401", "F403"]  # Allow unused/star imports
-"tests/**" = ["INP001", "D103"]  # Test directories
-"**/test/**" = ["INP001", "D103"]
-"**/tests/**" = ["INP001", "D103"]
+"__init__.py" = ["F401"]  # Allow unused imports in __init__ (but still detect undefined names from star imports)
+"tests/**" = ["INP001", "D100", "D103", "D101", "D102", "C901"]  # Test directories: allow complex functions
+"**/test/**" = ["INP001", "D100", "D103", "D101", "D102", "C901"]  # Allow complex functions
+"**/tests/**" = ["INP001", "D100", "D103", "D101", "D102", "C901"]  # Allow complex functions
 
 [tool.ruff.lint.isort]
 known-first-party = ["propdag"]
