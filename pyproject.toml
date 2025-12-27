@@ -85,6 +85,7 @@ select = [
     "T10",   # flake8-debugger
     "PTH",   # flake8-use-pathlib
     "INP",   # flake8-no-pep420
+    "RUF",   # Ruff-specific rules (includes non-ASCII detection)
 ]
 
 ignore = [
