@@ -98,7 +98,7 @@ class TNode(ABC, Generic[CacheType, ArgumentType]):
         """
         raise RuntimeError(f"This method should be instantiated in {type(self).__name__}.")
 
-    def _init_symbnd(self):
+    def init_symbnd(self):
         """
         Initialize symbolic bounds.
 
@@ -109,7 +109,7 @@ class TNode(ABC, Generic[CacheType, ArgumentType]):
         """
         raise RuntimeError(f"This method should be instantiated in {type(self).__name__}.")
 
-    def _build_rlx(self):
+    def build_rlx(self):
         """
         Build relaxation for non-linear operations.
 
@@ -127,7 +127,7 @@ class TNode(ABC, Generic[CacheType, ArgumentType]):
         """
         raise RuntimeError(f"This method should be instantiated in {type(self).__name__}.")
 
-    def _fwdprop_symbnd(self):
+    def fwdprop_symbnd(self):
         """
         Forward propagate symbolic bounds.
 
@@ -144,7 +144,7 @@ class TNode(ABC, Generic[CacheType, ArgumentType]):
         """
         raise RuntimeError(f"This method should be instantiated in {type(self).__name__}.")
 
-    def _bwdprop_symbnd(self):
+    def bwdprop_symbnd(self):
         """
         Backward propagate symbolic bounds via substitution.
 
@@ -161,7 +161,7 @@ class TNode(ABC, Generic[CacheType, ArgumentType]):
         """
         raise RuntimeError(f"This method should be instantiated in {type(self).__name__}.")
 
-    def _cal_and_update_cur_node_bnd(self):
+    def cal_and_update_cur_node_bnd(self):
         """
         Calculate and update bounds for current node.
 

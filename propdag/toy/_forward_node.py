@@ -49,9 +49,9 @@ class ForwardToyNode(TNode[ToyCache, ToyArgument]):
         # Non-input node: compute bounds via propagation
         self.cache.cur_node = self
 
-        self._build_rlx()  # Step 1: Relaxation for non-linear ops
-        self._fwdprop_symbnd()  # Step 2: Symbolic bound propagation
-        self._cal_and_update_cur_node_bnd()  # Step 3: Concrete bound calculation
+        self.build_rlx()  # Step 1: Relaxation for non-linear ops
+        self.fwdprop_symbnd()  # Step 2: Symbolic bound propagation
+        self.cal_and_update_cur_node_bnd()  # Step 3: Concrete bound calculation
 
     def backward(self):
         """
@@ -85,7 +85,7 @@ class ForwardToyNode(TNode[ToyCache, ToyArgument]):
 
     # Inherited properties: cache, argument (avoid override issues)
 
-    def _build_rlx(self):
+    def build_rlx(self):
         """
         Build relaxations for non-linear operations.
 
@@ -93,7 +93,7 @@ class ForwardToyNode(TNode[ToyCache, ToyArgument]):
         """
         print(f"{self.name}: Calculate relaxation if this is non-linear node")
 
-    def _fwdprop_symbnd(self):
+    def fwdprop_symbnd(self):
         """
         Forward propagate symbolic bounds from predecessors.
 
@@ -114,7 +114,7 @@ class ForwardToyNode(TNode[ToyCache, ToyArgument]):
         print(f"{self.name}: Cache symbolic bounds")
         self.cache.symbnds[self.name] = ("symbolic bounds",)
 
-    def _bwdprop_symbnd(self):
+    def bwdprop_symbnd(self):
         """
         Not supported in forward propagation mode.
 
@@ -122,7 +122,7 @@ class ForwardToyNode(TNode[ToyCache, ToyArgument]):
         """
         raise RuntimeError("Backward pass is not supported in forward mode")
 
-    def _cal_and_update_cur_node_bnd(self):
+    def cal_and_update_cur_node_bnd(self):
         """
         Calculate and cache scalar bounds for this node.
 

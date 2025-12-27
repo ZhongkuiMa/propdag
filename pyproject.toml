@@ -34,7 +34,7 @@ dev = [
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["propdag*"]
+include = ["propdag"]
 exclude = ["tests*", "docs*"]
 
 [tool.setuptools.package-data]
@@ -132,6 +132,7 @@ warn_unused_configs = true
 warn_unused_ignores = true
 disallow_untyped_defs = false
 ignore_missing_imports = true
+explicit_package_bases = true
 
 [tool.pyright]
 include = ["propdag"]

@@ -37,8 +37,8 @@ class BackwardToyNode(TNode[ToyCache, ToyArgument]):
 
         self.cache.cur_node = self
 
-        self._build_rlx()
-        self._init_symbnd()
+        self.build_rlx()
+        self.init_symbnd()
 
     def backward(self):
         """
@@ -47,8 +47,8 @@ class BackwardToyNode(TNode[ToyCache, ToyArgument]):
         Propagates symbolic bounds backward and calculates/updates scalar bounds for
         the current node.
         """
-        self._bwdprop_symbnd()
-        self._cal_and_update_cur_node_bnd()  # This may bot be valid for all nodes.
+        self.bwdprop_symbnd()
+        self.cal_and_update_cur_node_bnd()  # This may bot be valid for all nodes.
 
     def clear_fwd_cache(self):
         """
@@ -72,7 +72,7 @@ class BackwardToyNode(TNode[ToyCache, ToyArgument]):
 
     # Inherited properties: cache, argument (avoid override issues)
 
-    def _init_symbnd(self):
+    def init_symbnd(self):
         """
         Initialize symbolic bounds for linear nodes.
 
@@ -80,7 +80,7 @@ class BackwardToyNode(TNode[ToyCache, ToyArgument]):
         """
         print(f"{self.name}: Build symbolic bounds if this is a linear node")
 
-    def _build_rlx(self):
+    def build_rlx(self):
         """
         Build relaxations for non-linear operations.
 
@@ -88,7 +88,7 @@ class BackwardToyNode(TNode[ToyCache, ToyArgument]):
         """
         print(f"{self.name}: Calculate relaxation if this is a non-linear node")
 
-    def _fwdprop_symbnd(self):
+    def fwdprop_symbnd(self):
         """
         Not supported in backward propagation mode.
 
@@ -96,7 +96,7 @@ class BackwardToyNode(TNode[ToyCache, ToyArgument]):
         """
         raise RuntimeError("Forward pass is not supported in backward mode. ")
 
-    def _bwdprop_symbnd(self):
+    def bwdprop_symbnd(self):
         """
         Backward propagate symbolic bounds.
 
@@ -112,7 +112,7 @@ class BackwardToyNode(TNode[ToyCache, ToyArgument]):
         print(f"{self.name}: Cache substitution")
         self.cache.symbnds[self.name] = (f"substitution of {self.name}",)
 
-    def _cal_and_update_cur_node_bnd(self):
+    def cal_and_update_cur_node_bnd(self):
         """
         Calculate and cache scalar bounds for the current node.
 
