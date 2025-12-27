@@ -6,7 +6,7 @@ creating and analyzing directed acyclic graphs in
 verification and machine learning applications.
 """
 
-from propdag.template import (
+from propdag.propdag.template import (
     TArgument,
     TCache,
     TModel,
@@ -17,7 +17,7 @@ from propdag.template import (
     topo_sort_forward_bfs,
     topo_sort_forward_dfs,
 )
-from propdag.utils import PropMode
+from propdag.propdag.utils import PropMode
 
 __all__ = [
     "PropMode",
