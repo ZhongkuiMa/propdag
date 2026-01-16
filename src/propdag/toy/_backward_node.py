@@ -32,7 +32,7 @@ class BackwardToyNode(TNode[ToyCache, ToyArgument]):
         if len(self._pre_nodes) == 0:
             # For the input node
             assert self.name in self.cache.bnds
-            print(f"{self.name}: Skip input node")
+            print(f"[INIT] {self.name}.forward() | skip → input_node [no_predecessors]")
             return
 
         self.cache.cur_node = self
@@ -58,7 +58,7 @@ class BackwardToyNode(TNode[ToyCache, ToyArgument]):
         """
         if len(self.next_nodes) > 0 and len(self.pre_nodes) > 0:
             # We need keep the bounds of the input and output nodes
-            print(f"{self.name}: Clear forward cache of bounds")
+            print(f"[CLEAR] {self.name}.clear_fwd_cache() | clear fwd_cache → bnds[{self.name}]")
             del self.cache.bnds[self.name]
 
     def clear_bwd_cache(self):
@@ -67,7 +67,7 @@ class BackwardToyNode(TNode[ToyCache, ToyArgument]):
 
         Removes symbolic bounds used during back-substitution.
         """
-        print(f"{self.name}: Clear backforward cache of symbolic bounds")
+        print(f"[CLEAR] {self.name}.clear_bwd_cache() | clear bwd_cache → symbnds[{self.name}]")
         del self.cache.symbnds[self.name]
 
     # Inherited properties: cache, argument (avoid override issues)
@@ -78,7 +78,20 @@ class BackwardToyNode(TNode[ToyCache, ToyArgument]):
 
         Builds initial symbolic bound representation for this node.
         """
-        print(f"{self.name}: Build symbolic bounds if this is a linear node")
+        is_cur_node = self.cache.cur_node == self
+
+        if is_cur_node:
+            print(
+                f"[PROPAGATE] {self.name}.forward() | init_symbnds → symbnds[{self.name}] [cur_node]"
+            )
+        else:
+            cur_name = self.cache.cur_node.name if self.cache.cur_node else "unknown"
+            print(
+                f"[PROPAGATE] {self.name}.forward() | prepare_symbnds → symbnds[{self.name}] [for: {cur_name}]"
+            )
+
+        print(f"[CACHE] {self.name}.forward() | store symbnds → cache.symbnds[{self.name}]")
+        self.cache.symbnds[self.name] = ("symbolic bounds",)
 
     def build_rlx(self):
         """
@@ -86,7 +99,7 @@ class BackwardToyNode(TNode[ToyCache, ToyArgument]):
 
         Prints a descriptive message about relaxation calculation.
         """
-        print(f"{self.name}: Calculate relaxation if this is a non-linear node")
+        print(f"[RELAX] {self.name}.build_rlx() | compute relaxation → rlxs[{self.name}]")
 
     def fwdprop_symbnd(self):
         """
@@ -105,11 +118,18 @@ class BackwardToyNode(TNode[ToyCache, ToyArgument]):
         Caches the resulting symbolic expressions.
         """
         assert self.cache.cur_node is not None, "cur_node must be set before backward propagation"
+        cur_name = self.cache.cur_node.name
+
         if self == self.cache.cur_node:
-            print(f"{self.name}: Prepare symbolic bounds of {self.name}")
+            print(
+                f"[PROPAGATE] {self.name}.backward() | init_symbnds → symbnds[{self.name}] [cur_node]"
+            )
         else:
-            print(f"{self.name}: Backsubstitute symbolic bounds of {self.cache.cur_node.name}")
-        print(f"{self.name}: Cache substitution")
+            print(
+                f"[PROPAGATE] {self.name}.backward() | bwd_substitute → symbnds[{self.name}] [from: {cur_name}]"
+            )
+
+        print(f"[CACHE] {self.name}.backward() | store substitution → cache.symbnds[{self.name}]")
         self.cache.symbnds[self.name] = (f"substitution of {self.name}",)
 
     def cal_and_update_cur_node_bnd(self):
@@ -121,6 +141,6 @@ class BackwardToyNode(TNode[ToyCache, ToyArgument]):
         """
         assert self.cache.cur_node is not None, "cur_node must be set before bound calculation"
         cur_name = self.cache.cur_node.name
-        print(f"{self.name}: Calculate scalar bounds of {cur_name}")
-        print(f"{self.name}: Cache scalar bounds")
+        print(f"[COMPUTE] {self.name}.backward() | calculate bounds → bnds[{cur_name}]")
+        print(f"[CACHE] {self.name}.backward() | store bnds → cache.bnds[{cur_name}]")
         self.cache.bnds[cur_name] = ("scalar bounds",)

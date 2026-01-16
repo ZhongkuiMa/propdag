@@ -191,8 +191,10 @@ class TestInputNodeHandling:
         # Capture output
         captured = capsys.readouterr()
 
-        # Verify input node skip message
-        assert "Skip input node" in captured.out
+        # Verify input node skip message (new structured format)
+        assert "[INIT]" in captured.out
+        assert "skip" in captured.out
+        assert "input_node" in captured.out
 
 
 class TestModelProperties:

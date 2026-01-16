@@ -73,21 +73,25 @@ class TModel(ABC):
     _all_backward_sorts: dict[NodeType, list[NodeType]]
 
     verbose: bool
+    clear_cache_during_running: bool
 
     def __init__(
         self,
         nodes: Sequence[NodeType],
         sort_strategy: Literal["dfs", "bfs"] = "bfs",
         verbose: bool = False,
+        clear_cache_during_running: bool = False,
     ):
         """
         Initialize a computational graph model.
 
         :param nodes: Sequence of nodes to include in the model
         :param verbose: Enable verbose output during execution
+        :param clear_cache_during_running: If True, clear forward and backward caches during execution
         :raises AssertionError: If not all nodes share the same cache and arguments
         """
         self.verbose = verbose
+        self.clear_cache_during_running = clear_cache_during_running
         self._sort_strategy = sort_strategy
         if sort_strategy == "dfs":
             self._nodes = topo_sort_forward_dfs(nodes, self.verbose)
@@ -158,9 +162,11 @@ class TModel(ABC):
             if self.arguments.prop_mode == PropMode.BACKWARD:
                 self.backsub(node)
 
-            clear_fwd_cache(cache_counter, node.pre_nodes)
+            if self.clear_cache_during_running:
+                clear_fwd_cache(cache_counter, node.pre_nodes)
 
-        clear_fwd_cache(cache_counter, [node])
+        if self.clear_cache_during_running:
+            clear_fwd_cache(cache_counter, [node])
 
     def backsub(self, node: NodeType):
         """
@@ -188,9 +194,11 @@ class TModel(ABC):
             if self.verbose:
                 print(f"\tBack-substitute {node.name}")
             node.backward()
-            clear_bwd_cache(cache_counter, node.next_nodes)
+            if self.clear_cache_during_running:
+                clear_bwd_cache(cache_counter, node.next_nodes)
 
-        clear_bwd_cache(cache_counter, [node])
+        if self.clear_cache_during_running:
+            clear_bwd_cache(cache_counter, [node])
 
     @property
     def sort_strategy(self):

@@ -8,7 +8,7 @@
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
 [![Tests](https://img.shields.io/badge/tests-119%20passed-success)](https://github.com/ZhongkuiMa/propdag/actions/workflows/unit-tests.yml)
 [![Coverage](https://img.shields.io/badge/coverage-95%25-brightgreen)](https://github.com/ZhongkuiMa/propdag)
-[![Version](https://img.shields.io/badge/version-2026.1.0-blue.svg)](https://github.com/ZhongkuiMa/propdag/releases)
+[![Version](https://img.shields.io/badge/version-2026.1.1-blue.svg)](https://github.com/ZhongkuiMa/propdag/releases)
 
 Lightweight framework for neural network verification via bound propagation on directed acyclic graphs (DAGs).
 
@@ -25,6 +25,7 @@ Rapid prototyping of bound propagation algorithms without building infrastructur
 - **DAG-native** - Handles residual/skip connections and branching
 - **Flexible ordering** - BFS or DFS topological traversal
 - **Bidirectional** - Forward and backward bound propagation
+- **Dual templates** - Choose template (original) or template2 (reversed graph with cleaner semantics)
 - **Extensible** - Abstract base classes for custom algorithms
 
 ## Quality Metrics
@@ -315,9 +316,65 @@ TOTAL                                  377     20    95%
 - More accurate but computationally intensive
 - Used in algorithms like CROWN, DeepPoly
 
+## Choosing Between Template and Template2
+
+PropDAG provides two complementary template systems for different use cases:
+
+| Aspect | Template (Original) | Template2 (New in v2026.1.1) |
+|--------|---------------------|------------------------------|
+| **Graph Structure** | User builds Input → Output | User builds Input → Output |
+| **Execution Model** | Multiple modes (FORWARD/BACKWARD) | Single-purpose (backward propagation only) |
+| **Semantics** | `backward_bound()` goes Output → Input | `forward()` on reversed graph |
+| **Clarity** | Semantic mismatch possible | Clear, intuitive semantics |
+| **Configuration** | `prop_mode` required | No mode switching |
+| **Use Case** | Forward propagation, research prototyping | Backward bound propagation (recommended) |
+
+**Recommendation for new projects:** Use **Template2** for backward bound propagation. It provides cleaner semantics and a more intuitive API.
+
+## Template2: Reversed Graph Semantics
+
+### The Problem with Template's Backward Propagation
+
+In the original `template/` module:
+- Users build graphs in the **natural direction**: Input → Hidden Layers → Output
+- But `backward_bound()` propagates **backward** through this **forward graph**
+- This creates semantic confusion: "going backward" through "forward edges"
+
+### Template2's Solution: Automatic Graph Reversal
+
+Template2 elegantly solves this with automatic graph reversal:
+
+1. **User builds graph normally** (Input → Output)
+2. **T2Model automatically reverses the graph** (swaps predecessor/successor relationships)
+3. **Now propagation flows forward** through the reversed graph (Output → Input)
+4. **Clear semantics**: `forward()` method on reversed graph achieves backward propagation naturally
+
+This approach aligns with how algorithms like CROWN and DeepPoly conceptually work: propagating bounds backward from output to input.
+
+### Key Advantages
+
+- **Intuitive API**: No semantic mismatch between method name and behavior
+- **Single purpose**: Focused on one task (backward bound propagation)
+- **No mode switching**: No need for `prop_mode` configuration
+- **Framework agnostic**: Can work with NumPy, PyTorch, or other frameworks
+- **Cleaner cache structure**: Simplified field naming (bnds, rlxs, fwd_bnds, symbnds)
+
+### Example Concept
+
+```
+# Graph as built by user (Input → Output)
+Input → ReLU → Linear → Output
+
+# T2Model automatically reverses to (Output → Input)
+Output → Linear → ReLU → Input
+
+# forward() propagation on reversed graph:
+# Bounds flow Output → Input (backward semantics achieved!)
+```
+
 ## Installation
 
-PropDAG is currently a component of the Rover verification framework and is **not available on PyPI**. Install from source:
+PropDAG is a standalone framework **not available on PyPI**. Install from source:
 
 ### Clone and Install
 
@@ -393,6 +450,66 @@ Study concrete implementations in `propdag/toy/`:
 
 See "Usage Guide" below for detailed examples.
 
+### Quick Start with Template2 (Recommended for Backward Propagation)
+
+If you're implementing backward bound propagation, Template2 provides a cleaner approach:
+
+**Step 1: Study Template2 Classes**
+
+Review the template2 module in `propdag/template2/`:
+
+1. **`_node.py`** - T2Node interface
+2. **`_model.py`** - T2Model with automatic graph reversal
+3. **`_cache.py`** - Simplified cache structure
+4. **`_arguments.py`** - Configuration (no prop_mode)
+
+**Step 2: Review Toy2 Implementations**
+
+Study concrete examples in `propdag/toy2/`:
+
+- **`_node.py`** - Example T2Node implementation
+- **`_cache.py`** - Example cache with bnds, rlxs, fwd_bnds, symbnds
+- **`_arguments.py`** - Example arguments
+- **`_model.py`** - Example model wrapper
+
+**Step 3: Simple Template2 Example**
+
+```python
+from propdag.toy2 import Toy2Node, Toy2Cache, Toy2Argument, Toy2Model
+
+# Create cache and arguments
+cache = Toy2Cache()
+args = Toy2Argument()
+
+# Build graph normally (Input → Output)
+input_node = Toy2Node("input", cache, args)
+hidden_node = Toy2Node("hidden", cache, args)
+output_node = Toy2Node("output", cache, args)
+
+# Connect nodes in forward direction
+input_node.next_nodes = [hidden_node]
+hidden_node.pre_nodes = [input_node]
+hidden_node.next_nodes = [output_node]
+output_node.pre_nodes = [hidden_node]
+
+# T2Model automatically reverses graph and executes
+model = Toy2Model([input_node, hidden_node, output_node])
+model.run()
+
+# Bounds are propagated from output to input (backward semantics)
+print(f"Input bounds: {cache.bnds.get('input')}")
+print(f"Output bounds: {cache.bnds.get('output')}")
+```
+
+**Key Differences from Template:**
+- Build graph the same way (Input → Output)
+- T2Model automatically reverses internally
+- No `prop_mode` configuration needed
+- `forward()` method achieves backward propagation
+- Cleaner semantics overall
+
+See "Usage Guide" below for detailed Template2 examples.
+
 ## API Overview
 
 ### Template Classes (`propdag.template`)
@@ -421,6 +538,44 @@ All template classes are abstract base classes (ABCs) that you extend:
 **`TArgument`**
 - Extend with your own configuration parameters
 - Must be frozen (`frozen=True`)
+
+### Template2 Classes (`propdag.template2`)
+
+Template2 provides reversed graph semantics for intuitive backward bound propagation:
+
+**`T2Node[CacheType, ArgumentType]`**
+- Abstract node for reversed graph execution
+- Implement `forward()` for backward propagation semantics
+- Same interface as TNode but works on automatically-reversed graph
+- Abstract methods:
+  - `forward()` - Forward computation on reversed graph (achieves backward semantics)
+  - `backward()` - Not typically used in backward propagation mode
+  - `build_rlx()`, `init_symbnd()`, `fwdprop_symbnd()`, `bwdprop_symbnd()`, `cal_and_update_cur_node_bnd()`
+
+**`T2Model[CacheType, ArgumentType, NodeType]`**
+- Model with automatic graph reversal
+- Methods:
+  - `run()` - Automatically reverses graph, then executes
+  - No back-substitution mode needed (semantic is already backward)
+
+**`T2Cache`**
+- Simplified cache for reversed graph execution
+- Typical fields: `bnds`, `rlxs`, `fwd_bnds`, `symbnds`
+- Extend with your own fields as a dataclass
+
+**`T2Argument`**
+- Configuration for template2 (no `prop_mode` needed)
+- Single-purpose: backward bound propagation
+- Extend with custom parameters
+
+**`reverse_dag(nodes)`**
+- Helper function to manually reverse graph edges
+- Used internally by T2Model but available for custom use
+- Swaps `pre_nodes` ↔ `next_nodes` for all nodes
+
+**Template2 Sorting Functions**
+- `topo_sort_forward_bfs_t2(nodes, verbose=False)` - BFS on reversed graph
+- `topo_sort_forward_dfs_t2(nodes, verbose=False)` - DFS on reversed graph
 
 ### Topological Sorting Functions
 
@@ -584,40 +739,6 @@ See `tests/conftest.py` for fixture examples showing how to build and run propag
 - **Linting**: All ruff checks pass (0 violations)
 - **Formatting**: All files properly formatted with ruff
 
-## Integration with Rover
-
-PropDAG serves as the foundational layer for the Rover neural network verification framework.
-
-### How Rover Extends PropDAG
-
-Rover provides PyTorch-specific implementations:
-
-**`rover.model.BasicModel`** extends `TModel`
-- Adds PyTorch tensor operations
-- Integrates with rover's verification pipeline
-- Supports GPU acceleration
-
-**`rover.cache`** provides concrete cache implementations:
-- `BasicCache` - Standard interval bounds
-- `LinPropCache` - Linear bound propagation (Fast-Lin, CROWN)
-- Stores PyTorch tensors instead of abstract data
-
-**`rover.nodes`** implements all common layers:
-- Linear layers, activations, normalization
-- Pooling, convolutions, reshaping operations
-- All extend `TNode` with PyTorch-specific logic
-
-### Using PropDAG Independently
-
-PropDAG is **zero-dependency** - you can use it without PyTorch or Rover:
-
-- Implement bound propagation with NumPy arrays or pure Python
-- Prototype verification algorithms rapidly
-- Educational purposes and algorithm research
-- Integration with other deep learning frameworks
-
-The abstract template design makes PropDAG framework-agnostic.
-
 ## Project Structure
 
 ```
@@ -630,13 +751,26 @@ propdag/
 │   │   ├── _cache.py       # TCache - intermediate results storage
 │   │   ├── _arguments.py   # TArgument - configuration
 │   │   └── _sort.py        # Topological sorting (BFS/DFS)
-│   ├── toy/                # Example implementations
+│   ├── toy/                # Example implementations for template/
 │   │   ├── __init__.py
 │   │   ├── _forward_node.py   # Forward propagation example
 │   │   ├── _backward_node.py  # Backward propagation example
 │   │   ├── _cache.py          # Example cache structure
 │   │   ├── _arguments.py      # Example arguments
 │   │   └── _model.py          # Example model wrapper
+│   ├── template2/          # Abstract base classes (reversed graph)
+│   │   ├── __init__.py
+│   │   ├── _node.py        # T2Node - reversed graph nodes
+│   │   ├── _model.py       # T2Model - with automatic graph reversal
+│   │   ├── _cache.py       # T2Cache - simplified cache structure
+│   │   ├── _arguments.py   # T2Argument - configuration
+│   │   └── _sort.py        # Topological sorting for template2
+│   ├── toy2/               # Example implementations for template2/
+│   │   ├── __init__.py
+│   │   ├── _node.py        # Example T2Node for reversed graph
+│   │   ├── _cache.py       # Example T2Cache structure
+│   │   ├── _arguments.py   # Example T2Argument
+│   │   └── _model.py       # Example T2Model wrapper
 │   ├── __init__.py         # Module exports
 │   ├── custom_types.py     # Type definitions (Generic types)
 │   └── utils.py            # PropMode enum (FORWARD/BACKWARD)

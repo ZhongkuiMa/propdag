@@ -43,7 +43,7 @@ class ForwardToyNode(TNode[ToyCache, ToyArgument]):
         # Input node: bounds provided externally (e.g., input specification)
         if len(self._pre_nodes) == 0:
             assert self.name in self.cache.bnds, f"Input bounds not set for {self.name}"
-            print(f"{self.name}: Skip input node")
+            print(f"[INIT] {self.name}.forward() | skip → input_node [no_predecessors]")
             return
 
         # Non-input node: compute bounds via propagation
@@ -70,11 +70,11 @@ class ForwardToyNode(TNode[ToyCache, ToyArgument]):
         """
         if len(self.next_nodes) > 0 and len(self.pre_nodes) > 0:
             # We need keep the bounds of the input and output nodes
-            print(f"{self.name}: Clear forward cache of bounds")
+            print(f"[CLEAR] {self.name}.clear_fwd_cache() | clear fwd_cache → bnds[{self.name}]")
             del self.cache.bnds[self.name]
         # Only clear symbnds if they exist (input nodes may not create symbnds)
         if self.name in self.cache.symbnds:
-            print(f"{self.name}: Clear forward cache of symbolic bounds")
+            print(f"[CLEAR] {self.name}.clear_fwd_cache() | clear fwd_cache → symbnds[{self.name}]")
             del self.cache.symbnds[self.name]
 
     def clear_bwd_cache(self):
@@ -93,7 +93,7 @@ class ForwardToyNode(TNode[ToyCache, ToyArgument]):
 
         Prints a descriptive message about relaxation calculation.
         """
-        print(f"{self.name}: Calculate relaxation if this is non-linear node")
+        print(f"[RELAX] {self.name}.build_rlx() | compute relaxation → rlxs[{self.name}]")
 
     def fwdprop_symbnd(self):
         """
@@ -107,13 +107,18 @@ class ForwardToyNode(TNode[ToyCache, ToyArgument]):
         Resulting symbolic expression is cached for later use.
         """
         if len(self.pre_nodes) == 0:  # Input node
-            print(f"{self.name}: Prepare symbolic bounds of {self.name}")
+            print(
+                f"[PROPAGATE] {self.name}.forward() | prepare symbnds → symbnds[{self.name}] [input_node]"
+            )
         else:  # Hidden/output node
             pre_names = [pre_node.name for pre_node in self.pre_nodes]
-            print(f"{self.name}: Forward propagate symbolic bounds of {pre_names}")
+            pre_str = ", ".join(pre_names)
+            print(
+                f"[PROPAGATE] {self.name}.forward() | fwd_propagate → symbnds[{self.name}] [from: {pre_str}]"
+            )
 
         # Cache symbolic expression (tuple placeholder in toy example)
-        print(f"{self.name}: Cache symbolic bounds")
+        print(f"[CACHE] {self.name}.forward() | store symbnds → cache.symbnds[{self.name}]")
         self.cache.symbnds[self.name] = ("symbolic bounds",)
 
     def bwdprop_symbnd(self):
@@ -131,6 +136,6 @@ class ForwardToyNode(TNode[ToyCache, ToyArgument]):
         Computes concrete numerical bounds based on symbolic bounds
         and updates the cache.
         """
-        print(f"{self.name}: Calculate scalar bounds")
-        print(f"{self.name}: Cache scalar bounds")
+        print(f"[COMPUTE] {self.name}.forward() | calculate bounds → bnds[{self.name}]")
+        print(f"[CACHE] {self.name}.forward() | store bnds → cache.bnds[{self.name}]")
         self.cache.bnds[self.name] = ("scalar bounds",)

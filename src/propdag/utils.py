@@ -17,6 +17,8 @@ class PropMode(IntEnum):
 
     :cvar FORWARD: Forward propagation (inputs to outputs)
     :cvar BACKWARD: Backward propagation with substitution (outputs to inputs)
+
+    Note: For backward bound propagation, use template2.T2Model instead.
     """
 
     FORWARD = 1

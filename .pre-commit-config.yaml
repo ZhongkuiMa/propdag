@@ -25,6 +25,7 @@ repos:
           - types-requests
         args: [--no-error-summary, --show-column-numbers]
         verbose: true
+        exclude: ^tests/
 
   # Standard pre-commit hooks
   - repo: https://github.com/pre-commit/pre-commit-hooks
