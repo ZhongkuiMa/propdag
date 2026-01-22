@@ -8,7 +8,7 @@
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
 [![Tests](https://img.shields.io/badge/tests-119%20passed-success)](https://github.com/ZhongkuiMa/propdag/actions/workflows/unit-tests.yml)
 [![Coverage](https://img.shields.io/badge/coverage-95%25-brightgreen)](https://github.com/ZhongkuiMa/propdag)
-[![Version](https://img.shields.io/badge/version-2026.1.1-blue.svg)](https://github.com/ZhongkuiMa/propdag/releases)
+[![Version](https://img.shields.io/badge/version-2026.1.3-blue.svg)](https://github.com/ZhongkuiMa/propdag/releases)
 
 Lightweight framework for neural network verification via bound propagation on directed acyclic graphs (DAGs).
 

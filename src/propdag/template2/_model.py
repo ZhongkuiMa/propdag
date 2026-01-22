@@ -11,7 +11,11 @@ from typing import TYPE_CHECKING, Literal
 
 from propdag.template2._arguments import T2Argument
 from propdag.template2._cache import T2Cache
-from propdag.template2._sort import topo_sort_forward_bfs_t2, topo_sort_forward_dfs_t2
+from propdag.template2._sort import (
+    topo_sort_backward_t2,
+    topo_sort_forward_bfs_t2,
+    topo_sort_forward_dfs_t2,
+)
 
 if TYPE_CHECKING:
     from propdag.template2._node import T2Node
@@ -127,6 +131,7 @@ class T2Model(ABC):
     _arguments: T2Argument
     _user_input: "T2Node"
     _user_output: "T2Node"
+    _all_backward_sorts: dict["T2Node", list["T2Node"]]
 
     verbose: bool
     clear_cache_during_running: bool
@@ -192,6 +197,10 @@ class T2Model(ABC):
         for node in user_nodes[1:]:
             assert node.cache == self._cache, "All nodes must share same cache"
             assert node.argument == self._arguments, "All nodes must share same arguments"
+
+        # Compute backward sorts for backsub (from each node back to Output/graph input)
+        # In the reversed graph, pre_nodes point toward the graph input (user's output)
+        self._all_backward_sorts = topo_sort_backward_t2(self._nodes, self.verbose)
 
     def run(self, *args, **kwargs):
         """

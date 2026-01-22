@@ -1,5 +1,5 @@
 __docformat__ = "restructuredtext"
-__all__ = ["topo_sort_forward_bfs_t2", "topo_sort_forward_dfs_t2"]
+__all__ = ["topo_sort_backward_t2", "topo_sort_forward_bfs_t2", "topo_sort_forward_dfs_t2"]
 
 from collections.abc import Sequence
 from typing import TYPE_CHECKING
@@ -79,6 +79,44 @@ def topo_sort_forward_dfs_t2(nodes: Sequence["T2Node"], verbose: bool = False) -
 
     # Reverse to get correct topological order (output to input in reversed graph)
     return sorted_nodes[::-1]
+
+
+def topo_sort_backward_t2(
+    nodes: Sequence["T2Node"], verbose: bool = False
+) -> dict["T2Node", list["T2Node"]]:
+    """
+    Generate backward topological sorts for each node in reversed graph.
+
+    For each node, computes a topological sort of all nodes required
+    for back-substitution from that node. Uses DFS traversal.
+
+    In the reversed graph context, this traverses backward through pre_nodes
+    which point toward the user's output (graph input).
+
+    :param nodes: Sequence of nodes in the REVERSED computational graph
+    :param verbose: Whether to print diagnostics
+    :return: Dictionary mapping each node to its backward topological sort
+    """
+
+    def dfs(node, visited, result):
+        if node in visited:
+            return
+        visited.add(node)
+        for pre_node in node.pre_nodes:
+            dfs(pre_node, visited, result)
+        result.append(node)  # post-order, ensures pre_node comes before node
+
+    backward_sorts: dict[T2Node, list[T2Node]] = {}
+    for node in nodes:
+        visited: set[T2Node] = set()
+        result: list[T2Node] = []
+        dfs(node, visited, result)
+        backward_sorts[node] = result  # already in correct topological order
+
+    for node, backward_sort in backward_sorts.items():
+        backward_sorts[node] = backward_sort[::-1]  # reverse to get correct order
+
+    return backward_sorts
 
 
 def topo_sort_forward_bfs_t2(nodes: Sequence["T2Node"], verbose: bool = False) -> list["T2Node"]:
