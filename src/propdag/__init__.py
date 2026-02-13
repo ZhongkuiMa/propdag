@@ -15,7 +15,7 @@ Main components:
 **New in v2026.1.1**: Added template2/ and toy2/ modules for cleaner backward bound propagation semantics.
 """
 
-__version__ = "2026.1.3"
+__version__ = "2026.2.0"
 
 from propdag.template import (
     TArgument,
