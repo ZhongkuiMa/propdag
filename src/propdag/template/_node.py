@@ -1,3 +1,5 @@
+"""Abstract base class for computational graph nodes."""
+
 __docformat__ = "restructuredtext"
 __all__ = ["TNode"]
 
@@ -177,7 +179,7 @@ class TNode(ABC, Generic[CacheType, ArgumentType]):
         """
         Get node name.
 
-        :returns: Name of this node
+        :return: Name of this node.
         """
         return self._name
 
@@ -186,7 +188,7 @@ class TNode(ABC, Generic[CacheType, ArgumentType]):
         """
         Get shared cache instance.
 
-        :returns: Cache instance shared across nodes
+        :return: Cache instance shared across nodes.
         """
         return self._cache
 
@@ -204,7 +206,7 @@ class TNode(ABC, Generic[CacheType, ArgumentType]):
         """
         Get shared arguments instance.
 
-        :returns: Arguments instance shared across nodes
+        :return: Arguments instance shared across nodes.
         """
         return self._argument
 
@@ -222,7 +224,7 @@ class TNode(ABC, Generic[CacheType, ArgumentType]):
         """
         Get predecessor nodes.
 
-        :returns: Sequence of nodes that precede this node
+        :return: Sequence of predecessor nodes.
         """
         return self._pre_nodes
 
@@ -240,7 +242,7 @@ class TNode(ABC, Generic[CacheType, ArgumentType]):
         """
         Get successor nodes.
 
-        :returns: Sequence of nodes that succeed this node
+        :return: Sequence of successor nodes.
         """
         return self._next_nodes
 

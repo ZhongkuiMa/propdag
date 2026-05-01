@@ -45,6 +45,8 @@ Components:
 - Toy2Node: Node with verbose bound propagation logging
 """
 
+__docformat__ = "restructuredtext"
+
 from propdag.toy2._arguments import Toy2Argument
 from propdag.toy2._cache import Toy2Cache
 from propdag.toy2._model import Toy2Model

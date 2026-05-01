@@ -1,3 +1,5 @@
+"""Arguments class for reversed graph models."""
+
 __docformat__ = "restructuredtext"
 __all__ = ["T2Argument"]
 

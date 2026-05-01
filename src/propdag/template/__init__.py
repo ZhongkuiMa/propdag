@@ -5,6 +5,8 @@ This module provides abstract base classes and utilities for building computatio
 graph structures that support both forward and backward propagation.
 """
 
+__docformat__ = "restructuredtext"
+
 from propdag.template._arguments import TArgument
 from propdag.template._cache import TCache
 from propdag.template._model import (
@@ -20,13 +22,10 @@ from propdag.template._sort import (
 )
 
 __all__ = [
-    # Core template classes
     "TArgument",
     "TCache",
     "TModel",
     "TNode",
-    # Cache management utilities
     "clear_bwd_cache",
     "clear_fwd_cache",
-    # Note: Topological sorting functions remain importable but not in public API
 ]

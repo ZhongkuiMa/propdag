@@ -1,3 +1,5 @@
+"""Base arguments class for computational graph configuration."""
+
 __docformat__ = "restructuredtext"
 __all__ = ["TArgument"]
 

@@ -1,3 +1,5 @@
+"""Topological sorting algorithms for computational graph traversal."""
+
 __docformat__ = "restructuredtext"
 __all__ = ["topo_sort_backward", "topo_sort_forward_bfs", "topo_sort_forward_dfs"]
 

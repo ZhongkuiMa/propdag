@@ -1,3 +1,5 @@
+"""Computational graph model template with forward and backward propagation."""
+
 __docformat__ = "restructuredtext"
 __all__ = [
     "TModel",
@@ -205,7 +207,7 @@ class TModel(ABC):
         """
         Get the sorting strategy used in the model.
 
-        :returns: Sorting strategy (either 'dfs' or 'bfs')
+        :return: Sorting strategy (either 'dfs' or 'bfs').
         """
         return self._sort_strategy
 
@@ -214,7 +216,7 @@ class TModel(ABC):
         """
         Get the nodes in the model.
 
-        :returns: Topologically sorted list of nodes
+        :return: Topologically sorted list of nodes.
         """
         return self._nodes
 
@@ -223,7 +225,7 @@ class TModel(ABC):
         """
         Get the shared cache for the model.
 
-        :returns: Cache instance shared by all nodes
+        :return: Cache instance shared by all nodes.
         """
         return self._cache
 
@@ -232,6 +234,6 @@ class TModel(ABC):
         """
         Get the shared arguments for the model.
 
-        :returns: Arguments instance shared by all nodes
+        :return: Arguments instance shared by all nodes.
         """
         return self._arguments

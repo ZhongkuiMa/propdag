@@ -1,3 +1,5 @@
+"""Abstract base class for reversed graph computational nodes."""
+
 __docformat__ = "restructuredtext"
 __all__ = ["T2ArgumentType", "T2CacheType", "T2Node"]
 
@@ -184,7 +186,7 @@ class T2Node(ABC, Generic[T2CacheType, T2ArgumentType]):
         """
         Get node name.
 
-        :returns: Name of this node
+        :return: Name of this node.
         """
         return self._name
 
@@ -193,7 +195,7 @@ class T2Node(ABC, Generic[T2CacheType, T2ArgumentType]):
         """
         Get shared cache instance.
 
-        :returns: Cache instance shared across nodes
+        :return: Cache instance shared across nodes.
         """
         return self._cache
 
@@ -211,7 +213,7 @@ class T2Node(ABC, Generic[T2CacheType, T2ArgumentType]):
         """
         Get shared arguments instance.
 
-        :returns: Arguments instance shared across nodes
+        :return: Arguments instance shared across nodes.
         """
         return self._argument
 
@@ -232,7 +234,7 @@ class T2Node(ABC, Generic[T2CacheType, T2ArgumentType]):
         **IMPORTANT**: After graph reversal, pre_nodes are the user's successor nodes!
         Example: If user built A→B, after reversal B.pre_nodes = [] and A.pre_nodes = [B]
 
-        :returns: Sequence of nodes that precede this node in reversed graph
+        :return: Sequence of predecessor nodes in reversed graph.
         """
         return self._pre_nodes
 
@@ -253,7 +255,7 @@ class T2Node(ABC, Generic[T2CacheType, T2ArgumentType]):
         **IMPORTANT**: After graph reversal, next_nodes are the user's predecessor nodes!
         Example: If user built A→B, after reversal A.next_nodes = [B] and B.next_nodes = []
 
-        :returns: Sequence of nodes that succeed this node in reversed graph
+        :return: Sequence of successor nodes in reversed graph.
         """
         return self._next_nodes
 

@@ -1,3 +1,5 @@
+"""Base cache class for computational graph intermediate results."""
+
 __docformat__ = "restructuredtext"
 __all__ = ["TCache"]
 

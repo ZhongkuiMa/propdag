@@ -1,3 +1,5 @@
+"""Reversed graph model for backward bound propagation."""
+
 __docformat__ = "restructuredtext"
 __all__ = [
     "T2Model",
@@ -243,7 +245,7 @@ class T2Model(ABC):
         """
         Get the sorting strategy used in the model.
 
-        :returns: Sorting strategy (either 'dfs' or 'bfs')
+        :return: Sorting strategy (either 'dfs' or 'bfs').
         """
         return self._sort_strategy
 
@@ -254,7 +256,7 @@ class T2Model(ABC):
 
         **IMPORTANT**: These are in reversed graph order (Output → Input in user's view).
 
-        :returns: Topologically sorted list of nodes in reversed graph
+        :return: Topologically sorted list of nodes in reversed graph.
         """
         return self._nodes
 
@@ -263,7 +265,7 @@ class T2Model(ABC):
         """
         Get the shared cache for the model.
 
-        :returns: Cache instance shared by all nodes
+        :return: Cache instance shared by all nodes.
         """
         return self._cache
 
@@ -272,7 +274,7 @@ class T2Model(ABC):
         """
         Get the shared arguments for the model.
 
-        :returns: Arguments instance shared by all nodes
+        :return: Arguments instance shared by all nodes.
         """
         return self._arguments
 
@@ -284,7 +286,7 @@ class T2Model(ABC):
         **IMPORTANT**: This is the node that was the INPUT before graph reversal.
         After reversal, this becomes the OUTPUT node in the reversed graph.
 
-        :returns: User's input node (before reversal)
+        :return: User's input node (before reversal).
         """
         return self._user_input
 
@@ -296,6 +298,6 @@ class T2Model(ABC):
         **IMPORTANT**: This is the node that was the OUTPUT before graph reversal.
         After reversal, this becomes the INPUT node in the reversed graph.
 
-        :returns: User's output node (before reversal)
+        :return: User's output node (before reversal).
         """
         return self._user_output

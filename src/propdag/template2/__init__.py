@@ -49,6 +49,8 @@ Components:
 - topo_sort_forward_bfs_t2/topo_sort_forward_dfs_t2: Topological sorting for reversed graphs
 """
 
+__docformat__ = "restructuredtext"
+
 from propdag.template2._arguments import T2Argument
 from propdag.template2._cache import T2Cache
 from propdag.template2._model import T2Model, clear_bwd_cache_t2, reverse_dag
@@ -56,18 +58,14 @@ from propdag.template2._node import T2ArgumentType, T2CacheType, T2Node
 from propdag.template2._sort import topo_sort_forward_bfs_t2, topo_sort_forward_dfs_t2
 
 __all__ = [
-    # Core template2 classes
     "T2Argument",
     "T2ArgumentType",
     "T2Cache",
     "T2CacheType",
     "T2Model",
     "T2Node",
-    # Cache management utility
     "clear_bwd_cache_t2",
-    # Graph reversal helper
     "reverse_dag",
-    # Topological sorting (not in public API but importable)
     "topo_sort_forward_bfs_t2",
     "topo_sort_forward_dfs_t2",
 ]

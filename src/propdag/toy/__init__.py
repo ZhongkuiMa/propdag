@@ -6,6 +6,8 @@ template module, demonstrating both forward and backward propagation modes with
 detailed logging output.
 """
 
+__docformat__ = "restructuredtext"
+
 from propdag.toy._arguments import ToyArgument
 from propdag.toy._backward_node import BackwardToyNode
 from propdag.toy._cache import ToyCache

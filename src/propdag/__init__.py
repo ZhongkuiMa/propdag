@@ -11,9 +11,9 @@ Main components:
 - toy: Example implementations with verbose logging (uses template/)
 - toy2: Example implementations for reversed graph semantics (uses template2/)
 - utils: PropMode enum (FORWARD/BACKWARD)
-
-**New in v2026.1.1**: Added template2/ and toy2/ modules for cleaner backward bound propagation semantics.
 """
+
+__docformat__ = "restructuredtext"
 
 __version__ = "2026.2.0"
 
@@ -28,8 +28,6 @@ from propdag.template import (
     topo_sort_forward_bfs,
     topo_sort_forward_dfs,
 )
-
-# NEW in v2026.2.0: Template2 for reversed graph semantics
 from propdag.template2 import (
     T2Argument,
     T2ArgumentType,
@@ -49,8 +47,6 @@ from propdag.toy import (
     ToyCache,
     ToyModel,
 )
-
-# NEW in v2026.2.0: Toy2 example implementations for reversed graph
 from propdag.toy2 import (
     Toy2Argument,
     Toy2Cache,
@@ -60,21 +56,17 @@ from propdag.toy2 import (
 from propdag.utils import PropMode
 
 __all__ = [
-    # Core utilities
     "PropMode",
-    # Template2 (new - reversed graph)
     "T2Argument",
     "T2ArgumentType",
     "T2Cache",
     "T2CacheType",
     "T2Model",
     "T2Node",
-    # Template (original - forward graph)
     "TArgument",
     "TCache",
     "TModel",
     "TNode",
-    # Toy2 (new - example for reversed graph)
     "Toy2Argument",
     "Toy2Cache",
     "Toy2Model",

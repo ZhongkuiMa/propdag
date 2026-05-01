@@ -1,3 +1,5 @@
+"""Cache for reversed graph backward bound propagation."""
+
 __docformat__ = "restructuredtext"
 __all__ = ["T2Cache"]
 
