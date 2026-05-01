@@ -209,7 +209,9 @@ class TestValidDAGsAccepted:
 
         # Should not raise any error
         model = Toy2Model(nodes, sort_strategy="bfs")
-        assert model is not None
+        assert isinstance(model, Toy2Model)
+        assert model.sort_strategy == "bfs"
+        assert len(model.nodes) == 3
 
     def test_diamond_accepted(self):
         """Test that diamond pattern is accepted."""
@@ -233,7 +235,9 @@ class TestValidDAGsAccepted:
 
         # Should not raise any error
         model = Toy2Model(nodes, sort_strategy="bfs")
-        assert model is not None
+        assert isinstance(model, Toy2Model)
+        assert model.sort_strategy == "bfs"
+        assert len(model.nodes) == 4
 
 
 class TestErrorMessageQuality:

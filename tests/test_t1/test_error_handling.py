@@ -276,9 +276,9 @@ class TestValidDAGsAccepted:
 
         nodes = [node1, node2]
 
-        # Should not raise any error
+        # Should not raise any error — construction validates the DAG
         model = ToyModel(nodes, sort_strategy="bfs")
-        assert model is not None
+        assert len(model.nodes) > 0, "Valid DAG must have nodes after construction"
 
     def test_diamond_accepted(self):
         """Test that a diamond DAG is accepted."""
@@ -300,9 +300,9 @@ class TestValidDAGsAccepted:
 
         nodes = [node1, node2, node3, node4]
 
-        # Should not raise any error
+        # Should not raise any error — construction validates the DAG
         model = ToyModel(nodes, sort_strategy="bfs")
-        assert model is not None
+        assert len(model.nodes) > 0, "Valid DAG must have nodes after construction"
 
     def test_skip_connection_accepted(self):
         """Test that DAGs with skip connections are accepted."""
@@ -324,9 +324,9 @@ class TestValidDAGsAccepted:
 
         nodes = [node1, node2, node3, node4]
 
-        # Should not raise any error
+        # Should not raise any error — construction validates the DAG
         model = ToyModel(nodes, sort_strategy="bfs")
-        assert model is not None
+        assert len(model.nodes) > 0, "Valid DAG must have nodes after construction"
 
 
 class TestErrorMessageQuality:
@@ -350,10 +350,8 @@ class TestErrorMessageQuality:
         nodes = [node1, node2, node3]
 
         # Error should mention input/output constraints
-        with pytest.raises(ValueError, match=r"input|output|multiple") as exc_info:
+        with pytest.raises(ValueError, match=r"input|output|multiple"):
             ToyModel(nodes, sort_strategy="bfs")
-        # Message should be informative
-        assert len(str(exc_info.value)) > 0
 
     def test_cycle_error_is_informative(self):
         """Test that the error message for cycles is clear."""
@@ -372,7 +370,5 @@ class TestErrorMessageQuality:
         nodes = [node1, node2]
 
         # Error should mention cycle or topological sort
-        with pytest.raises(ValueError, match=r"cycle|topological") as exc_info:
+        with pytest.raises(ValueError, match=r"cycle|topological"):
             ToyModel(nodes, sort_strategy="bfs")
-        # Message should be informative
-        assert len(str(exc_info.value)) > 0

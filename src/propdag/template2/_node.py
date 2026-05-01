@@ -39,12 +39,6 @@ class T2Node(ABC, Generic[T2CacheType, T2ArgumentType]):
     - Calculate concrete numerical bounds
     - Manage caches for intermediate results
     - Intersect backward-propagated bounds with forward bounds
-
-    :ivar _name: Unique identifier for this node
-    :ivar _cache: Shared cache for bounds and relaxations
-    :ivar _argument: Shared arguments
-    :ivar _pre_nodes: Predecessor nodes in REVERSED graph (user's successors)
-    :ivar _next_nodes: Successor nodes in REVERSED graph (user's predecessors)
     """
 
     _name: str

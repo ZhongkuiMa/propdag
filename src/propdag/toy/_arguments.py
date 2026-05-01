@@ -1,3 +1,5 @@
+"""Toy argument class for forward/backward propagation examples."""
+
 __docformat__ = "restructuredtext"
 __all__ = ["ToyArgument"]
 

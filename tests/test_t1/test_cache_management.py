@@ -407,10 +407,11 @@ class TestSymbolicBoundsCleanup:
         model.run()
 
         # Check cache state at the end
-        # Note: The exact cleanup behavior depends on TNode implementation
-        # We verify at least that computation completed
-        assert cache.bnds["Node-1"] is not None
-        assert cache.bnds["Node-3"] is not None
+        # Input and output bounds must be tuples with content
+        assert isinstance(cache.bnds["Node-1"], tuple), "Input bounds should be a tuple"
+        assert isinstance(cache.bnds["Node-3"], tuple), "Output bounds should be a tuple"
+        assert len(cache.bnds["Node-1"]) > 0, "Input bounds should not be empty"
+        assert len(cache.bnds["Node-3"]) > 0, "Output bounds should not be empty"
 
 
 class TestClearCacheDuringRunning:

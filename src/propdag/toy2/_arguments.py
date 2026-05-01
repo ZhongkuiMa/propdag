@@ -1,3 +1,5 @@
+"""Toy argument class for reversed graph propagation examples."""
+
 __docformat__ = "restructuredtext"
 __all__ = ["Toy2Argument"]
 

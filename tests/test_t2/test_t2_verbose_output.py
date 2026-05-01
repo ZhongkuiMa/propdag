@@ -118,9 +118,9 @@ class TestToy2NodeVerboseOutput:
 
         # Verify Node-2 messages all have correct node name
         node2_messages = output.get_messages_for_node("Node-2")
+        assert len(node2_messages) > 0, "Expected messages for Node-2"
         for msg in node2_messages:
             output.verify_node_name(msg, "Node-2")
-            # Passes if no assertion error
 
     def test_t2_cache_state_verification(self, capsys):
         """Verify cache state changes correctly after CACHE messages."""
@@ -146,6 +146,7 @@ class TestToy2NodeVerboseOutput:
 
         # Verify cache state after each CACHE message for Node-1
         node1_messages = output.get_messages_for_node("Node-1")
+        assert len(node1_messages) > 0, "Expected messages for Node-1"
         for msg in node1_messages:
             parsed = output.verify_message_format(msg)
             if parsed["phase"] == "CACHE":

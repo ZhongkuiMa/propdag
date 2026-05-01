@@ -339,6 +339,9 @@ class TestForwardNodeVerboseOutput:
         captured = capsys.readouterr()
         output = VerboseOutputCapture(captured.out)
 
+        # Verify messages were captured
+        assert len(output.lines) > 0, "Expected verbose output messages from 5-node graph"
+
         # Verify EVERY message follows format
         for line in output.lines:
             output.verify_message_format(line)  # Will assert if format is wrong

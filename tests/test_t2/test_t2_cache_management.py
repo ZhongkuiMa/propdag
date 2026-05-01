@@ -54,8 +54,8 @@ class TestModelExecution:
         model = Toy2Model([node1, node2, node3])
         model.run()
 
-        # Execution completed successfully
-        assert toy2_cache is not None
+        # Execution must populate bounds in cache
+        assert len(toy2_cache.bnds) > 0, "Execution must produce bounds"
 
     def test_diamond_executes(self, toy2_cache, toy2_arguments):
         """Test diamond pattern executes correctly."""
@@ -76,8 +76,8 @@ class TestModelExecution:
         model = Toy2Model([input_node, node_a, node_b, output_node])
         model.run()
 
-        # Execution completed
-        assert toy2_cache is not None
+        # Execution must populate bounds in cache
+        assert len(toy2_cache.bnds) > 0, "Execution must produce bounds"
 
 
 class TestCacheClearing:

@@ -1,3 +1,5 @@
+"""Cache storing symbolic bounds, scalar bounds, and relaxations for toy models."""
+
 __docformat__ = "restructuredtext"
 __all__ = ["ToyCache"]
 

@@ -90,6 +90,7 @@ class TestTopologicalSortValidity:
         # Test both sorting algorithms
         for sort_func in [topo_sort_forward_bfs, topo_sort_forward_dfs]:
             sorted_nodes = sort_func(nodes, verbose=False)
+            assert len(sorted_nodes) == len(nodes), "Sort must return all nodes"
             self._verify_topological_order(sorted_nodes, nodes)
 
     def test_bfs_and_dfs_validity_on_skip_connection(self):
@@ -116,6 +117,7 @@ class TestTopologicalSortValidity:
         # Test both sorting algorithms
         for sort_func in [topo_sort_forward_bfs, topo_sort_forward_dfs]:
             sorted_nodes = sort_func(nodes, verbose=False)
+            assert len(sorted_nodes) == len(nodes), "Sort must return all nodes"
             self._verify_topological_order(sorted_nodes, nodes)
 
     def test_bfs_and_dfs_validity_on_wide_merge(self):
@@ -140,6 +142,7 @@ class TestTopologicalSortValidity:
         # Test both sorting algorithms
         for sort_func in [topo_sort_forward_bfs, topo_sort_forward_dfs]:
             sorted_nodes = sort_func(nodes, verbose=False)
+            assert len(sorted_nodes) == len(nodes), "Sort must return all nodes"
             self._verify_topological_order(sorted_nodes, nodes)
 
 

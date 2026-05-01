@@ -19,7 +19,6 @@ def test_t2model_initialization(toy2_node_factory):
 
     model = Toy2Model([input_node, output_node])
 
-    assert model is not None
     assert len(model.nodes) == 2
     # After reversal, output should be first
     assert model.nodes[0] == output_node
@@ -57,8 +56,8 @@ def test_toy2node_forward(toy2_cache, toy2_arguments):
     # Call forward (should not crash)
     node.forward()
 
-    # Basic verification - method executed
-    assert toy2_cache.cur_node is not None
+    # Verify forward() populated bounds for the node
+    assert "TestNode" in toy2_cache.bnds, "forward() must populate cache.bnds"
 
 
 def test_toy2node_build_rlx(toy2_cache, toy2_arguments):
@@ -67,11 +66,12 @@ def test_toy2node_build_rlx(toy2_cache, toy2_arguments):
 
     toy2_cache.cur_node = node
 
-    # Call build_rlx (should not crash)
+    # Call build_rlx
     node.build_rlx()
 
-    # Method executed successfully
-    assert True
+    # Verify build_rlx() stored inverse relaxation in cache
+    assert "TestNode" in toy2_cache.rlxs, "build_rlx() must populate cache.rlxs"
+    assert isinstance(toy2_cache.rlxs["TestNode"], tuple)
 
 
 def test_cache_structure(toy2_cache):

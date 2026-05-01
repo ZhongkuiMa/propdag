@@ -1,3 +1,5 @@
+"""Cache for reversed graph toy model inheriting T2Cache fields."""
+
 __docformat__ = "restructuredtext"
 __all__ = ["Toy2Cache"]
 

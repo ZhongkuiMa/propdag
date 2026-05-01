@@ -256,9 +256,11 @@ class TestCacheClearingParameter:
 
         nodes = [node1, node2]
 
-        # Create model with cache clearing enabled
+        # Create model with cache clearing enabled and verify property
         model = Toy2Model(nodes, sort_strategy="bfs", clear_cache_during_running=True)
         assert model.clear_cache_during_running is True
+        assert isinstance(model, Toy2Model)
+        assert len(model.nodes) == 2
 
     def test_clear_cache_parameter_false(self):
         """Test that clear_cache_during_running=False is respected."""

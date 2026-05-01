@@ -28,12 +28,6 @@ class TNode(ABC, Generic[CacheType, ArgumentType]):
     - Input nodes: no predecessors, bounds provided externally
     - Hidden nodes: have predecessors and successors
     - Output nodes: no successors, final bounds computed here
-
-    :ivar _name: Unique identifier for this node
-    :ivar _cache: Shared cache for bounds and symbolic expressions
-    :ivar _argument: Shared arguments (e.g., verification parameters)
-    :ivar _pre_nodes: Predecessor nodes (inputs to this operation)
-    :ivar _next_nodes: Successor nodes (consumers of this operation)
     """
 
     _name: str

@@ -58,7 +58,7 @@ class TestBasicStructures:
 
         # Assertions
         assert "Node-4" in cache.bnds, "Output node must have bounds"
-        assert cache.bnds["Node-4"] is not None
+        assert isinstance(cache.bnds["Node-4"], tuple) and len(cache.bnds["Node-4"]) > 0
         assert "Node-1" in cache.bnds, "Input node bounds must be preserved"
 
     @pytest.mark.parametrize("sort_strategy", ["bfs", "dfs"])
@@ -95,7 +95,7 @@ class TestBasicStructures:
         model.run()
 
         # Assertions
-        assert cache.bnds["Node-4"] is not None
+        assert isinstance(cache.bnds["Node-4"], tuple), "Output bounds must be a tuple"
         assert "Node-1" in cache.bnds, "Input node bounds preserved"
 
     @pytest.mark.parametrize("sort_strategy", ["bfs", "dfs"])
@@ -133,7 +133,7 @@ class TestBasicStructures:
         model.run()
 
         # Assertions
-        assert cache.bnds["Node-4"] is not None
+        assert isinstance(cache.bnds["Node-4"], tuple), "Output bounds must be a tuple"
 
 
 class TestSkipConnections:
@@ -173,7 +173,7 @@ class TestSkipConnections:
         model.run()
 
         # Assertions
-        assert cache.bnds["Node-4"] is not None
+        assert isinstance(cache.bnds["Node-4"], tuple), "Output bounds must be a tuple"
 
     @pytest.mark.parametrize("sort_strategy", ["bfs", "dfs"])
     @pytest.mark.parametrize("prop_mode", [PropMode.FORWARD, PropMode.BACKWARD])
@@ -214,7 +214,7 @@ class TestSkipConnections:
         model.run()
 
         # Assertions
-        assert cache.bnds["Node-6"] is not None
+        assert isinstance(cache.bnds["Node-6"], tuple), "Output bounds must be a tuple"
 
     @pytest.mark.parametrize("sort_strategy", ["bfs", "dfs"])
     @pytest.mark.parametrize("prop_mode", [PropMode.FORWARD, PropMode.BACKWARD])
@@ -252,7 +252,7 @@ class TestSkipConnections:
         model.run()
 
         # Assertions
-        assert cache.bnds["Node-4"] is not None
+        assert isinstance(cache.bnds["Node-4"], tuple), "Output bounds must be a tuple"
 
 
 class TestMultiInputCases:
@@ -290,7 +290,7 @@ class TestMultiInputCases:
         model.run()
 
         # Assertions
-        assert cache.bnds["Node-3"] is not None
+        assert isinstance(cache.bnds["Node-3"], tuple), "Output bounds must be a tuple"
 
     @pytest.mark.parametrize("sort_strategy", ["bfs", "dfs"])
     @pytest.mark.parametrize("prop_mode", [PropMode.FORWARD, PropMode.BACKWARD])
@@ -331,7 +331,7 @@ class TestMultiInputCases:
         model.run()
 
         # Assertions
-        assert cache.bnds["Node-5"] is not None
+        assert isinstance(cache.bnds["Node-5"], tuple), "Output bounds must be a tuple"
 
     @pytest.mark.parametrize("sort_strategy", ["bfs", "dfs"])
     @pytest.mark.parametrize("prop_mode", [PropMode.FORWARD, PropMode.BACKWARD])
@@ -371,7 +371,7 @@ class TestMultiInputCases:
         model.run()
 
         # Assertions
-        assert cache.bnds["Node-6"] is not None
+        assert isinstance(cache.bnds["Node-6"], tuple), "Output bounds must be a tuple"
 
 
 class TestComplexBranching:
@@ -416,7 +416,7 @@ class TestComplexBranching:
         model.run()
 
         # Assertions
-        assert cache.bnds["Node-6"] is not None
+        assert isinstance(cache.bnds["Node-6"], tuple), "Output bounds must be a tuple"
 
     @pytest.mark.parametrize("sort_strategy", ["bfs", "dfs"])
     @pytest.mark.parametrize("prop_mode", [PropMode.FORWARD, PropMode.BACKWARD])
@@ -477,7 +477,7 @@ class TestComplexBranching:
         model.run()
 
         # Assertions
-        assert cache.bnds["Node-9"] is not None
+        assert isinstance(cache.bnds["Node-9"], tuple), "Output bounds must be a tuple"
 
     @pytest.mark.parametrize("sort_strategy", ["bfs", "dfs"])
     @pytest.mark.parametrize("prop_mode", [PropMode.FORWARD, PropMode.BACKWARD])
@@ -518,7 +518,7 @@ class TestComplexBranching:
         model.run()
 
         # Assertions
-        assert cache.bnds["Node-7"] is not None
+        assert isinstance(cache.bnds["Node-7"], tuple), "Output bounds must be a tuple"
 
 
 class TestBoundaryAndEdgeCases:
@@ -547,8 +547,8 @@ class TestBoundaryAndEdgeCases:
         model.run()
 
         # Assertions
-        assert cache.bnds["Node-2"] is not None
-        assert cache.bnds["Node-1"] is not None
+        assert isinstance(cache.bnds["Node-2"], tuple), "Output bounds must be a tuple"
+        assert isinstance(cache.bnds["Node-1"], tuple), "Input bounds must be preserved"
 
     @pytest.mark.benchmark
     @pytest.mark.parametrize("sort_strategy", ["bfs", "dfs"])
@@ -574,7 +574,7 @@ class TestBoundaryAndEdgeCases:
         model.run()
 
         # Assertions
-        assert cache.bnds["Node-15"] is not None
+        assert isinstance(cache.bnds["Node-15"], tuple), "Output bounds must be a tuple"
 
     @pytest.mark.parametrize("sort_strategy", ["bfs", "dfs"])
     @pytest.mark.parametrize("prop_mode", [PropMode.FORWARD, PropMode.BACKWARD])
@@ -604,7 +604,7 @@ class TestBoundaryAndEdgeCases:
         model.run()
 
         # Assertions
-        assert cache.bnds["Node-8"] is not None
+        assert isinstance(cache.bnds["Node-8"], tuple), "Output bounds must be a tuple"
 
 
 class TestRealisticNetworkPatterns:
@@ -670,7 +670,7 @@ class TestRealisticNetworkPatterns:
         model.run()
 
         # Assertions
-        assert cache.bnds["Node-10"] is not None
+        assert isinstance(cache.bnds["Node-10"], tuple), "Output bounds must be a tuple"
 
     @pytest.mark.parametrize("sort_strategy", ["bfs", "dfs"])
     @pytest.mark.parametrize("prop_mode", [PropMode.FORWARD, PropMode.BACKWARD])
@@ -707,4 +707,4 @@ class TestRealisticNetworkPatterns:
         model.run()
 
         # Assertions
-        assert cache.bnds["Node-5"] is not None
+        assert isinstance(cache.bnds["Node-5"], tuple), "Output bounds must be a tuple"
