@@ -12,6 +12,7 @@ from abc import ABC
 from collections.abc import Sequence
 from typing import Literal
 
+from propdag._enums import PropMode
 from propdag.custom_types import NodeType
 from propdag.template._arguments import TArgument
 from propdag.template._cache import TCache
@@ -20,7 +21,6 @@ from propdag.template._sort import (
     topo_sort_forward_bfs,
     topo_sort_forward_dfs,
 )
-from propdag.utils import PropMode
 
 
 def clear_fwd_cache(cache_counter: dict[NodeType, int], nodes: Sequence[NodeType]):

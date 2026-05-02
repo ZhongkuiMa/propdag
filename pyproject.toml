@@ -81,12 +81,14 @@ select = [
     "SLF",   # flake8-self
     "TD",    # flake8-todos
     "D",     # pydocstyle
+    "DOC",   # pydoclint (docstring validation)
     "PERF",  # perflint
     "FURB",  # refurb
     "PT",    # flake8-pytest-style
     "T10",   # flake8-debugger
     "PTH",   # flake8-use-pathlib
     "INP",   # flake8-no-pep420
+    "NPY",   # NumPy-specific rules
     "RUF",   # Ruff-specific rules (includes non-ASCII detection)
 ]
 

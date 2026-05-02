@@ -17,6 +17,7 @@ __docformat__ = "restructuredtext"
 
 __version__ = "2026.2.0"
 
+from propdag._enums import PropMode
 from propdag.template import (
     TArgument,
     TCache,
@@ -53,7 +54,6 @@ from propdag.toy2 import (
     Toy2Model,
     Toy2Node,
 )
-from propdag.utils import PropMode
 
 __all__ = [
     "PropMode",
