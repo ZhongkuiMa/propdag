@@ -14,15 +14,6 @@ pytest tests/ -v
 ## Checks
 
 ```bash
-pytest tests/ -v
-ruff check src/propdag tests
-ruff format --check src/propdag tests
-python -m mypy
-```
-
-Or with pre-commit:
-
-```bash
 pre-commit run --all-files
 ```
 
