@@ -6,6 +6,8 @@ __all__ = ["topo_sort_backward_t2", "topo_sort_forward_bfs_t2", "topo_sort_forwa
 from collections.abc import Sequence
 from typing import TYPE_CHECKING
 
+from propdag._constants import CYCLE_ERROR_MSG
+
 if TYPE_CHECKING:
     from propdag.template2._node import T2Node
 
@@ -62,7 +64,7 @@ def topo_sort_forward_dfs_t2(nodes: Sequence["T2Node"], verbose: bool = False) -
 
     def dfs(node):
         if node in temp_mark:
-            raise ValueError("Graph has a cycle, cannot perform topological sort")
+            raise ValueError(CYCLE_ERROR_MSG)
         if node not in visited:
             temp_mark.add(node)
             for next_node in node.next_nodes:
@@ -77,7 +79,7 @@ def topo_sort_forward_dfs_t2(nodes: Sequence["T2Node"], verbose: bool = False) -
             dfs(node)
 
     if len(sorted_nodes) != len(nodes):
-        raise ValueError("Graph has a cycle, cannot perform topological sort")
+        raise ValueError(CYCLE_ERROR_MSG)
 
     # Reverse to get correct topological order (output to input in reversed graph)
     return sorted_nodes[::-1]
@@ -159,6 +161,6 @@ def topo_sort_forward_bfs_t2(nodes: Sequence["T2Node"], verbose: bool = False) -
                 queue.append(next_node)
 
     if len(sorted_nodes) != len(nodes):
-        raise ValueError("Graph has a cycle, cannot perform topological sort")
+        raise ValueError(CYCLE_ERROR_MSG)
 
     return sorted_nodes

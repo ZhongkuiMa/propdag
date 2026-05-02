@@ -5,6 +5,7 @@ __all__ = ["topo_sort_backward", "topo_sort_forward_bfs", "topo_sort_forward_dfs
 
 from collections.abc import Sequence
 
+from propdag._constants import CYCLE_ERROR_MSG
 from propdag.custom_types import NodeType
 
 
@@ -49,7 +50,7 @@ def topo_sort_forward_dfs(nodes: Sequence[NodeType], verbose: bool = False) -> l
 
     def dfs(node):
         if node in temp_mark:
-            raise ValueError("Graph has a cycle, cannot perform topological sort")
+            raise ValueError(CYCLE_ERROR_MSG)
         if node not in visited:
             temp_mark.add(node)
             for next_node in node.next_nodes:
@@ -63,7 +64,7 @@ def topo_sort_forward_dfs(nodes: Sequence[NodeType], verbose: bool = False) -> l
             dfs(node)
 
     if len(sorted_nodes) != len(nodes):
-        raise ValueError("Graph has a cycle, cannot perform topological sort")
+        raise ValueError(CYCLE_ERROR_MSG)
 
     # Reverse to get correct topological order (from input to output)
     return sorted_nodes[::-1]
@@ -99,7 +100,7 @@ def topo_sort_forward_bfs(nodes: Sequence[NodeType], verbose: bool = False) -> l
                 queue.append(next_node)
 
     if len(sorted_nodes) != len(nodes):
-        raise ValueError("Graph has a cycle, cannot perform topological sort")
+        raise ValueError(CYCLE_ERROR_MSG)
 
     return sorted_nodes
 

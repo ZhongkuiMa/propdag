@@ -1,6 +1,7 @@
 __docformat__ = "restructuredtext"
 __all__ = ["Toy2Model"]
 
+from propdag._constants import SEPARATOR_LINE
 from propdag.template2 import T2Model
 
 
@@ -39,15 +40,15 @@ class Toy2Model(T2Model):
         :param kwargs: Keyword arguments (unused)
         """
         if self.verbose:
-            print("\n" + "=" * 60)
+            print("\n" + SEPARATOR_LINE)
             print("Running Toy2Model (Reversed Graph Semantics)")
-            print("=" * 60)
+            print(SEPARATOR_LINE)
             print(f"Nodes in topological order: {[n.name for n in self.nodes]}")
-            print("=" * 60 + "\n")
+            print(SEPARATOR_LINE + "\n")
 
         super().run(*args, **kwargs)
 
         if self.verbose:
-            print("\n" + "=" * 60)
+            print("\n" + SEPARATOR_LINE)
             print("Toy2Model execution complete")
-            print("=" * 60 + "\n")
+            print(SEPARATOR_LINE + "\n")
