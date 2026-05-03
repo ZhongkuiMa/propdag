@@ -152,13 +152,6 @@ addopts = [
     "-ra",
     "--strict-markers",
 ]
-markers = [
-    "topology: Tests for different DAG topologies",
-    "sorting: Tests for topological sorting algorithms",
-    "cache: Tests for cache management and reference counting",
-    "error_handling: Tests for error detection and constraint validation",
-    "benchmark: Slow benchmark tests for performance testing (run with: pytest -m benchmark)",
-]
 
 [tool.coverage.run]
 source = ["src/propdag"]

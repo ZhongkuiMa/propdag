@@ -16,7 +16,7 @@ This directory contains golden sequence files for verifying exact execution orde
 When you make changes to the propagation algorithm or template logic, you need to regenerate the golden sequences:
 
 ```bash
-cd tests/test_t1
+cd tests/test_template
 python capture_golden_sequences.py > golden_sequences.py
 ```
 

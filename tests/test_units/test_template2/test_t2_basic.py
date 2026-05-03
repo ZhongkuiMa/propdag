@@ -75,12 +75,14 @@ def test_toy2node_build_rlx(toy2_cache, toy2_arguments):
 
 
 def test_cache_structure(toy2_cache):
-    """Verify T2Cache has correct fields."""
-    assert hasattr(toy2_cache, "bnds")
-    assert hasattr(toy2_cache, "rlxs")
-    assert hasattr(toy2_cache, "fwd_bnds")
-    assert hasattr(toy2_cache, "symbnds")
+    """T2Cache exposes empty dict containers for bnds/rlxs/fwd_bnds/symbnds and a cur_node slot."""
+    for field in ("bnds", "rlxs", "fwd_bnds", "symbnds"):
+        container = getattr(toy2_cache, field)
+        assert isinstance(container, dict), f"{field} must be a dict, got {type(container)}"
+        assert container == {}, f"{field} must be empty on a fresh cache"
+    # cur_node is the only non-dict slot — it must exist and start unset (None or empty).
     assert hasattr(toy2_cache, "cur_node")
+    assert toy2_cache.cur_node is None or toy2_cache.cur_node == ()
 
 
 def test_arguments_no_prop_mode():

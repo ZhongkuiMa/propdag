@@ -12,9 +12,9 @@ import pytest
 
 from propdag import Toy2Argument, Toy2Cache, Toy2Model, Toy2Node
 
-# Add test_t1 to path to import TOPOLOGY_SPECS
-test_t1_path = Path(__file__).parent.parent / "test_t1"
-sys.path.insert(0, str(test_t1_path))
+# Add test_template to path to import TOPOLOGY_SPECS
+test_template_path = Path(__file__).parent.parent / "test_template"
+sys.path.insert(0, str(test_template_path))
 
 # Reuse helper classes from T1 tests
 from test_verbose_output import (  # noqa: E402

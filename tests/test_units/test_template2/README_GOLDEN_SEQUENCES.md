@@ -16,7 +16,7 @@ This directory contains golden sequence files for verifying exact execution orde
 When you make changes to the T2 template logic or reversed graph execution, regenerate the golden sequences:
 
 ```bash
-cd tests/test_t2
+cd tests/test_template2
 python capture_golden_sequences_t2.py > golden_sequences_t2.py
 ```
 

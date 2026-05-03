@@ -5,9 +5,9 @@ Generates expected sequences for all 17 topologies x 2 modes x 2 strategies = 68
 
 Usage
 -----
-From the test_t1 directory::
+From the test_template directory::
 
-    cd tests/test_t1
+    cd tests/test_template
     python capture_golden_sequences.py > golden_sequences.py
 """
 

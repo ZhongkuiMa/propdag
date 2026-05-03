@@ -1,0 +1,5 @@
+# Source packages exempt from MIR1 (UNMIRRORED_SOURCE) detection.
+# These are reference implementations exercised through the template/template2
+# test suites, not standalone test targets.
+toy
+toy2

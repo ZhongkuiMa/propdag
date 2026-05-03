@@ -5,9 +5,9 @@ Generates expected sequences for all 17 topologies x 2 strategies = 34 cases.
 
 Usage
 -----
-From the test_t2 directory::
+From the test_template2 directory::
 
-    cd tests/test_t2
+    cd tests/test_template2
     python capture_golden_sequences_t2.py > golden_sequences_t2.py
 """
 
@@ -16,9 +16,9 @@ import sys
 from io import StringIO
 from pathlib import Path
 
-# Add test_t1 to path to import TOPOLOGY_SPECS
-test_t1_path = Path(__file__).parent.parent / "test_t1"
-sys.path.insert(0, str(test_t1_path))
+# Add test_template to path to import TOPOLOGY_SPECS
+test_template_path = Path(__file__).parent.parent / "test_template"
+sys.path.insert(0, str(test_template_path))
 
 from test_verbose_output import TOPOLOGY_SPECS  # noqa: E402
 
