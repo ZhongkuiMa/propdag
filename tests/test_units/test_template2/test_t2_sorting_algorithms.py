@@ -25,6 +25,57 @@ from test_template2._helpers import build_chain_nodes_t2, build_diamond_model_t2
 _FORWARD_SORTS_T2 = [topo_sort_forward_bfs_t2, topo_sort_forward_dfs_t2]
 
 
+def _build_sort_topology_nodes_t2(topology: str) -> list[Toy2Node]:
+    """Build nodes for a named topology, returning the user-orientation node list.
+
+    :param topology: one of ``"diamond"``, ``"skip_connection"``, ``"wide_merge"``
+    :return: list of wired Toy2Node instances
+    """
+    cache = Toy2Cache()
+    cache.fwd_bnds["Node-1"] = ("input bounds",)
+    arguments = Toy2Argument()
+
+    if topology == "diamond":
+        n1 = Toy2Node("Node-1", cache, arguments)
+        n2 = Toy2Node("Node-2", cache, arguments)
+        n3 = Toy2Node("Node-3", cache, arguments)
+        n4 = Toy2Node("Node-4", cache, arguments)
+        n1.next_nodes = [n2, n3]
+        n2.pre_nodes = [n1]
+        n2.next_nodes = [n4]
+        n3.pre_nodes = [n1]
+        n3.next_nodes = [n4]
+        n4.pre_nodes = [n2, n3]
+        return [n1, n2, n3, n4]
+
+    if topology == "skip_connection":
+        n1 = Toy2Node("Node-1", cache, arguments)
+        n2 = Toy2Node("Node-2", cache, arguments)
+        n3 = Toy2Node("Node-3", cache, arguments)
+        n4 = Toy2Node("Node-4", cache, arguments)
+        n1.next_nodes = [n2, n4]
+        n2.pre_nodes = [n1]
+        n2.next_nodes = [n3]
+        n3.pre_nodes = [n2]
+        n3.next_nodes = [n4]
+        n4.pre_nodes = [n1, n3]
+        return [n1, n2, n3, n4]
+
+    if topology == "wide_merge":
+        n1 = Toy2Node("Node-1", cache, arguments)
+        intermediate = [Toy2Node(f"Node-{i}", cache, arguments) for i in range(2, 6)]
+        n6 = Toy2Node("Node-6", cache, arguments)
+        n1.next_nodes = intermediate
+        for n in intermediate:
+            n.pre_nodes = [n1]
+            n.next_nodes = [n6]
+        n6.pre_nodes = intermediate
+        return [n1, *intermediate, n6]
+
+    msg = f"Unknown topology: {topology}"
+    raise ValueError(msg)
+
+
 class TestTopologicalSortValidity:
     """Topological sorts produce valid orders for representative T2 topologies."""
 
@@ -38,65 +89,17 @@ class TestTopologicalSortValidity:
         for i, (orig, ordered) in enumerate(zip(nodes, sorted_nodes, strict=True)):
             assert orig == ordered, f"Linear chain must preserve order at position {i}"
 
-    def test_bfs_and_dfs_validity_on_diamond(self):
-        """Diamond pattern produces a valid order under both BFS and DFS."""
-        cache = Toy2Cache()
-        cache.fwd_bnds["Node-1"] = ("input bounds",)
-        arguments = Toy2Argument()
-        n1 = Toy2Node("Node-1", cache, arguments)
-        n2 = Toy2Node("Node-2", cache, arguments)
-        n3 = Toy2Node("Node-3", cache, arguments)
-        n4 = Toy2Node("Node-4", cache, arguments)
-        n1.next_nodes = [n2, n3]
-        n2.pre_nodes = [n1]
-        n2.next_nodes = [n4]
-        n3.pre_nodes = [n1]
-        n3.next_nodes = [n4]
-        n4.pre_nodes = [n2, n3]
-        nodes = [n1, n2, n3, n4]
-
-        for sort_func in _FORWARD_SORTS_T2:
-            sorted_nodes = sort_func(nodes, verbose=False)
-            assert len(sorted_nodes) == len(nodes), "Sort must return all nodes"
-            verify_topological_order(sorted_nodes)
-
-    def test_bfs_and_dfs_validity_on_skip_connection(self):
-        """Skip connection topology is valid under both BFS and DFS."""
-        cache = Toy2Cache()
-        cache.fwd_bnds["Node-1"] = ("input bounds",)
-        arguments = Toy2Argument()
-        n1 = Toy2Node("Node-1", cache, arguments)
-        n2 = Toy2Node("Node-2", cache, arguments)
-        n3 = Toy2Node("Node-3", cache, arguments)
-        n4 = Toy2Node("Node-4", cache, arguments)
-        n1.next_nodes = [n2, n4]
-        n2.pre_nodes = [n1]
-        n2.next_nodes = [n3]
-        n3.pre_nodes = [n2]
-        n3.next_nodes = [n4]
-        n4.pre_nodes = [n1, n3]
-        nodes = [n1, n2, n3, n4]
-
-        for sort_func in _FORWARD_SORTS_T2:
-            sorted_nodes = sort_func(nodes, verbose=False)
-            assert len(sorted_nodes) == len(nodes), "Sort must return all nodes"
-            verify_topological_order(sorted_nodes)
-
-    def test_bfs_and_dfs_validity_on_wide_merge(self):
-        """Many-to-one wide-merge topology is valid under both BFS and DFS."""
-        cache = Toy2Cache()
-        cache.fwd_bnds["Node-1"] = ("input bounds",)
-        arguments = Toy2Argument()
-        n1 = Toy2Node("Node-1", cache, arguments)
-        intermediate = [Toy2Node(f"Node-{i}", cache, arguments) for i in range(2, 6)]
-        n6 = Toy2Node("Node-6", cache, arguments)
-        n1.next_nodes = intermediate
-        for n in intermediate:
-            n.pre_nodes = [n1]
-            n.next_nodes = [n6]
-        n6.pre_nodes = intermediate
-        nodes = [n1, *intermediate, n6]
-
+    @pytest.mark.parametrize(
+        "topology",
+        [
+            pytest.param("diamond", id="diamond"),
+            pytest.param("skip_connection", id="skip_connection"),
+            pytest.param("wide_merge", id="wide_merge"),
+        ],
+    )
+    def test_bfs_and_dfs_validity_on_various_topologies(self, topology):
+        """Various topologies produce valid topological orders under both BFS and DFS."""
+        nodes = _build_sort_topology_nodes_t2(topology)
         for sort_func in _FORWARD_SORTS_T2:
             sorted_nodes = sort_func(nodes, verbose=False)
             assert len(sorted_nodes) == len(nodes), "Sort must return all nodes"
