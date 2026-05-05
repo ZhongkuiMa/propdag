@@ -39,7 +39,7 @@ class TestVerboseMode:
 class TestInvalidSortStrategy:
     """Error handling for invalid sort strategies."""
 
-    def test_invalid_sort_strategy_raises_error(self):
+    def test_raises_error(self):
         """An unknown sort_strategy raises ValueError."""
         _, _, nodes = build_chain_model_t2(3)
         with pytest.raises(ValueError, match="Unknown sort strategy"):
@@ -88,7 +88,7 @@ class TestCacheClearingParameter:
     """``clear_cache_during_running`` parameter is forwarded to the model."""
 
     @pytest.mark.parametrize("clear", [True, False])
-    def test_clear_cache_parameter(self, clear):
+    def test_clear(self, clear):
         """The flag round-trips through model construction."""
         model, _, _ = build_chain_model_t2(2, clear_cache_during_running=clear)
         assert model.clear_cache_during_running is clear

@@ -205,7 +205,7 @@ class CacheStateVerifier:
 class TestForwardNodeVerboseOutput:
     """Test verbose output format for ForwardToyNode."""
 
-    def test_linear_chain_verbose_output(self, capsys):
+    def test_linear_chain(self, capsys):
         """Test verbose output for simple linear chain."""
         cache = ToyCache()
         cache.bnds["Node-1"] = ("input bounds",)
@@ -278,7 +278,7 @@ class TestForwardNodeVerboseOutput:
             ]
         )
 
-    def test_diamond_pattern_verbose_output(self, capsys):
+    def test_diamond_pattern(self, capsys):
         """Test verbose output for diamond merge pattern."""
         cache = ToyCache()
         cache.bnds["Node-1"] = ("input bounds",)

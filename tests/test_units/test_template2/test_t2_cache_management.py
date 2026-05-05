@@ -69,7 +69,7 @@ class TestSharedCache:
 class TestForwardBounds:
     """Forward bounds initialization."""
 
-    def test_forward_bounds_seeded(self):
+    def test_seeded(self):
         """``cache.fwd_bnds`` retains its seed entry through model execution."""
         model, cache, _ = build_chain_model_t2(2)
         model.run()

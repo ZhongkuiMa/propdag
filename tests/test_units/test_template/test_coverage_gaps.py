@@ -45,7 +45,7 @@ class TestVerboseMode:
 class TestInvalidSortStrategy:
     """Error handling for invalid sort strategies."""
 
-    def test_invalid_sort_strategy_raises_error(self):
+    def test_raises_error(self):
         """An unknown sort_strategy raises ValueError."""
         # Build chain with default bfs, then re-instantiate with bad strategy.
         _, _, nodes = build_chain_model(3)
@@ -62,7 +62,7 @@ class TestInvalidSortStrategy:
 class TestInputNodeHandling:
     """Input nodes are skipped during forward pass."""
 
-    def test_input_node_skip(self, capsys):
+    def test_skip(self, capsys):
         """The input node prints a skip diagnostic in verbose mode."""
         model, _, _ = build_chain_model(3, verbose=True)
         model.run()
@@ -95,7 +95,7 @@ class TestModelProperties:
 class TestCacheClearingVerbose:
     """Cache clearing diagnostics in verbose mode."""
 
-    def test_forward_cache_clearing_logged(self, capsys):
+    def test_forward_logged(self, capsys):
         """Cache clearing prints either a clear-cache or forward-pass diagnostic."""
         model, _, _ = build_chain_model(3, verbose=True)
         model.run()

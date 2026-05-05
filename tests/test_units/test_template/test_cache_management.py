@@ -229,7 +229,7 @@ class TestCacheMemoryEfficiency:
 class TestSymbolicBoundsCleanup:
     """Symbolic bounds are cleaned up appropriately."""
 
-    def test_symbolic_bounds_in_linear_chain(self):
+    def test_in_linear_chain(self):
         """Input and output bounds remain populated after a linear chain run."""
         model, cache, _ = build_chain_model(3)
         model.run()

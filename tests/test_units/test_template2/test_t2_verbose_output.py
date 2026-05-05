@@ -33,7 +33,7 @@ except ImportError:
 class TestToy2NodeVerboseOutput:
     """Test verbose output format for Toy2Node."""
 
-    def test_reversed_graph_verbose_output(self, capsys):
+    def test_reversed_graph(self, capsys):
         """Test verbose output for reversed graph execution."""
         cache = Toy2Cache()
         cache.fwd_bnds["Node-1"] = ("forward bounds",)
