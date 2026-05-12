@@ -6,6 +6,8 @@ results to T1 BACKWARD mode. Note: Results may not be bitwise identical
 due to different execution orders, but should be functionally equivalent.
 """
 
+__docformat__ = "restructuredtext"
+
 from propdag import (
     BackwardToyNode,
     PropMode,

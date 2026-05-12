@@ -24,13 +24,13 @@ class T2Node(ABC, Generic[T2CacheType, T2ArgumentType]):
     achieves backward bound propagation without semantic confusion.
 
     **Graph Structure After Reversal**:
-    - User builds: Input → Hidden → Output
-    - T2Model reverses to: Output → Hidden → Input
+    - User builds: Input -> Hidden -> Output
+    - T2Model reverses to: Output -> Hidden -> Input
     - T2Node "input" (pre_nodes=[]): User's OUTPUT (constraint origin)
     - T2Node "output" (next_nodes=[]): User's INPUT (final bounds)
 
     **Method Semantics (changed by graph reversal)**:
-    - forward(): Propagates bounds backward (output → input in user's view)
+    - forward(): Propagates bounds backward (output -> input in user's view)
     - build_rlx(): Builds inverse relaxations (was build_inverse_rlx in template/)
 
     **Key Responsibilities**:
@@ -51,9 +51,12 @@ class T2Node(ABC, Generic[T2CacheType, T2ArgumentType]):
         """
         Initialize a node in the reversed computational graph.
 
-        :param name: Name of the node
-        :param cache: Shared cache instance
-        :param argument: Shared arguments instance
+        :param name: Name of the node.
+
+        :param cache: Shared cache instance.
+
+        :param argument: Shared arguments instance.
+
         """
         self._name = name
         self._cache = cache
@@ -61,7 +64,7 @@ class T2Node(ABC, Generic[T2CacheType, T2ArgumentType]):
         self._pre_nodes = []
         self._next_nodes = []
 
-    def forward(self):
+    def rev_propagate(self) -> None:
         """
         Forward propagation through reversed graph.
 
@@ -74,52 +77,57 @@ class T2Node(ABC, Generic[T2CacheType, T2ArgumentType]):
         2. Propagate bounds from successors in reversed graph
         3. Intersect with forward bounds from initial pass
 
-        :raises RuntimeError: If not implemented by subclass
+        :raises RuntimeError: If not implemented by subclass.
+
         """
         raise RuntimeError(f"This method should be instantiated in {type(self).__name__}.")
 
-    def backward(self):
+    def bwd_backsub(self) -> None:
         """
         Backward propagation for BACKWARD mode.
 
         Template2 supports backward mode same as template, just with reversed
         graph semantics. This method is used when prop_mode is BACKWARD.
 
-        :raises RuntimeError: If not implemented by subclass
+        :raises RuntimeError: If not implemented by subclass.
+
         """
         raise RuntimeError(f"This method should be instantiated in {type(self).__name__}.")
 
-    def clear_fwd_cache(self):
+    def clear_fwd_cache(self) -> None:
         """
         Clear forward computation cache.
 
         In template2 context, this clears caches from the "forward" pass
         through the reversed graph (which is backward propagation in user's view).
 
-        :raises RuntimeError: If not implemented by subclass
+        :raises RuntimeError: If not implemented by subclass.
+
         """
         raise RuntimeError(f"This method should be instantiated in {type(self).__name__}.")
 
-    def clear_bwd_cache(self):
+    def clear_bwd_cache(self) -> None:
         """
         Clear backward propagation cache.
 
-        :raises RuntimeError: If not implemented by subclass
+        :raises RuntimeError: If not implemented by subclass.
+
         """
         raise RuntimeError(f"This method should be instantiated in {type(self).__name__}.")
 
-    def init_symbnd(self):
+    def init_symbnd(self) -> None:
         """
         Initialize symbolic bounds.
 
         May or may not be used depending on implementation. Some template2
         implementations might compute bounds directly without symbolic expressions.
 
-        :raises RuntimeError: If not implemented by subclass
+        :raises RuntimeError: If not implemented by subclass.
+
         """
         raise RuntimeError(f"This method should be instantiated in {type(self).__name__}.")
 
-    def build_rlx(self):
+    def build_rlx(self) -> None:
         """
         Build relaxation (INVERSE relaxation in template2 semantics).
 
@@ -138,32 +146,35 @@ class T2Node(ABC, Generic[T2CacheType, T2ArgumentType]):
             if y_u == 0: x <= 0   # ReLU was inactive
             else: compute inverse triangle relaxation
 
-        :raises RuntimeError: If not implemented by subclass
+        :raises RuntimeError: If not implemented by subclass.
+
         """
         raise RuntimeError(f"This method should be instantiated in {type(self).__name__}.")
 
-    def fwdprop_symbnd(self):
+    def fwdprop_symbnd(self) -> None:
         """
         Forward propagate symbolic bounds through reversed graph.
 
-        **SEMANTIC SHIFT**: In reversed graph, "forward" means output→input.
+        **SEMANTIC SHIFT**: In reversed graph, "forward" means output->input.
         This might be used for bound calculation if symbolic expressions are needed.
 
-        :raises RuntimeError: If not implemented by subclass
+        :raises RuntimeError: If not implemented by subclass.
+
         """
         raise RuntimeError(f"This method should be instantiated in {type(self).__name__}.")
 
-    def bwdprop_symbnd(self):
+    def bwdprop_symbnd(self) -> None:
         """
         Backward propagate symbolic bounds.
 
         Template2 doesn't support symbolic back-substitution.
 
-        :raises RuntimeError: Always
+        :raises RuntimeError: Always.
+
         """
         raise RuntimeError("bwdprop_symbnd() is not supported in template2.")
 
-    def cal_and_update_cur_node_bnd(self):
+    def cal_and_update_cur_node_bnd(self) -> None:
         """
         Calculate and update bounds for current node.
 
@@ -171,7 +182,8 @@ class T2Node(ABC, Generic[T2CacheType, T2ArgumentType]):
         this typically involves intersecting backward-propagated bounds
         with forward bounds.
 
-        :raises RuntimeError: If not implemented by subclass
+        :raises RuntimeError: If not implemented by subclass.
+
         """
         raise RuntimeError(f"This method should be instantiated in {type(self).__name__}.")
 
@@ -198,7 +210,8 @@ class T2Node(ABC, Generic[T2CacheType, T2ArgumentType]):
         """
         Set shared cache instance.
 
-        :param value: Cache instance to use
+        :param value: Cache instance to use.
+
         """
         self._cache = value
 
@@ -216,7 +229,8 @@ class T2Node(ABC, Generic[T2CacheType, T2ArgumentType]):
         """
         Set shared arguments instance.
 
-        :param value: Arguments instance to use
+        :param value: Arguments instance to use.
+
         """
         self._argument = value
 
@@ -226,7 +240,7 @@ class T2Node(ABC, Generic[T2CacheType, T2ArgumentType]):
         Get predecessor nodes in REVERSED graph.
 
         **IMPORTANT**: After graph reversal, pre_nodes are the user's successor nodes!
-        Example: If user built A→B, after reversal B.pre_nodes = [] and A.pre_nodes = [B]
+        Example: If user built A->B, after reversal B.pre_nodes = [] and A.pre_nodes = [B]
 
         :return: Sequence of predecessor nodes in reversed graph.
         """
@@ -237,7 +251,8 @@ class T2Node(ABC, Generic[T2CacheType, T2ArgumentType]):
         """
         Set predecessor nodes in REVERSED graph.
 
-        :param value: List of nodes that precede this node in reversed graph
+        :param value: List of nodes that precede this node in reversed graph.
+
         """
         self._pre_nodes = value
 
@@ -247,7 +262,7 @@ class T2Node(ABC, Generic[T2CacheType, T2ArgumentType]):
         Get successor nodes in REVERSED graph.
 
         **IMPORTANT**: After graph reversal, next_nodes are the user's predecessor nodes!
-        Example: If user built A→B, after reversal A.next_nodes = [B] and B.next_nodes = []
+        Example: If user built A->B, after reversal A.next_nodes = [B] and B.next_nodes = []
 
         :return: Sequence of successor nodes in reversed graph.
         """
@@ -258,6 +273,7 @@ class T2Node(ABC, Generic[T2CacheType, T2ArgumentType]):
         """
         Set successor nodes in REVERSED graph.
 
-        :param value: List of nodes that succeed this node in reversed graph
+        :param value: List of nodes that succeed this node in reversed graph.
+
         """
         self._next_nodes = value

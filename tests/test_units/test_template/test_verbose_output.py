@@ -5,6 +5,8 @@ Verifies that toy models produce correctly formatted messages that
 accurately represent the template logic flow.
 """
 
+__docformat__ = "restructuredtext"
+
 import re
 
 import pytest
@@ -43,13 +45,13 @@ class VerboseOutputCapture:
         """
         Verify a message matches the standard format.
 
-        Format: [PHASE] NodeName.method() | operation → target [context]
+        Format: [PHASE] NodeName.method() | operation -> target [context]
         """
-        # Pattern: [PHASE] Node.method() | operation → target [optional_context]
+        # Pattern: [PHASE] Node.method() | operation -> target [optional_context]
         # Allow spaces in operation (e.g., "compute relaxation")
         # Allow hyphens in target (e.g., symbnds[Node-1])
         pattern = (
-            r"^\[([A-Z]+)\] ([\w-]+)\.([\w_]+)\(\) \| ([\w_ ]+) → ([\w\[\]\.-]+)(?: \[(.+)\])?$"
+            r"^\[([A-Z]+)\] ([\w-]+)\.([\w_]+)\(\) \| ([\w_ ]+) -> ([\w\[\]\.-]+)(?: \[(.+)\])?$"
         )
         match = re.match(pattern, message)
 
@@ -384,7 +386,7 @@ class TestPhaseSequencing:
     """Test that phases occur in correct logical order."""
 
     def test_forward_node_phase_order(self, capsys):
-        """Verify phases occur in order: RELAX → PROPAGATE → CACHE → COMPUTE → CACHE."""
+        """Verify phases occur in order: RELAX -> PROPAGATE -> CACHE -> COMPUTE -> CACHE."""
         cache = ToyCache()
         cache.bnds["Node-1"] = ("input bounds",)
         arguments = ToyArgument(prop_mode=PropMode.FORWARD)
@@ -624,7 +626,7 @@ def verify_valid_phase_sequences(actual_sequence):
     Verify each node's phases follow valid transitions.
 
     Valid phase orders:
-    - FORWARD: INIT (input) or RELAX → PROPAGATE → CACHE → COMPUTE → CACHE
+    - FORWARD: INIT (input) or RELAX -> PROPAGATE -> CACHE -> COMPUTE -> CACHE
     - BACKWARD: More complex with forward init + backward substitution
 
     This checks that phases don't appear in impossible orders.
@@ -665,7 +667,7 @@ class TestTopologyVerboseOutput:
         """Verify exact message sequence against golden output for given topology.
 
         This test validates:
-        1. All messages match format: [PHASE] NodeName.method() | operation → target [context]
+        1. All messages match format: [PHASE] NodeName.method() | operation -> target [context]
         2. Exact sequence matches golden output (complete execution correctness)
         3. Output node has valid bounds in cache
         4. Input node bounds are preserved

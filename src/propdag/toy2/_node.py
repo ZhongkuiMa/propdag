@@ -1,3 +1,5 @@
+"""Toy2 node implementation for reversed graph semantics."""
+
 __docformat__ = "restructuredtext"
 __all__ = ["Toy2Node"]
 
@@ -15,16 +17,16 @@ class Toy2Node(T2Node[Toy2Cache, Toy2Argument]):
     - BackwardBoundToyNode.backward_bound(): Propagates backward bounds
     - Toy2Node.forward(): DOES BOTH (because graph is reversed!)
 
-    **Method Mapping (Old → New)**:
-    - backward_bound() → merged into forward()
-    - build_inverse_rlx() → build_rlx() (semantic shift)
-    - bwdprop_bounds() → propagate_bounds()
-    - intersect_and_update_bnd() → unchanged
+    **Method Mapping (Old -> New)**:
+    - backward_bound() -> merged into forward()
+    - build_inverse_rlx() -> build_rlx() (semantic shift)
+    - bwdprop_bounds() -> propagate_bounds()
+    - intersect_and_update_bnd() -> unchanged
 
-    **Cache Field Mapping (Old → New)**:
-    - cache.back_bnds → cache.bnds (primary bounds)
-    - cache.inv_rlxs → cache.rlxs (primary relaxations)
-    - cache.bnds → cache.fwd_bnds (forward bounds for intersection)
+    **Cache Field Mapping (Old -> New)**:
+    - cache.back_bnds -> cache.bnds (primary bounds)
+    - cache.inv_rlxs -> cache.rlxs (primary relaxations)
+    - cache.bnds -> cache.fwd_bnds (forward bounds for intersection)
 
     Demonstrates backward bound propagation through reversed graph with
     verbose logging for educational purposes.
@@ -36,7 +38,7 @@ class Toy2Node(T2Node[Toy2Cache, Toy2Argument]):
     :ivar _next_nodes: Successors in REVERSED graph (user's predecessors!)
     """
 
-    def forward(self):
+    def rev_propagate(self):
         """
         Forward propagation through reversed graph.
 
@@ -52,7 +54,7 @@ class Toy2Node(T2Node[Toy2Cache, Toy2Argument]):
         # Input node in reversed graph = user's OUTPUT node
         if len(self._pre_nodes) == 0:
             print(
-                f"[INIT] {self.name}.forward() | initialize output → bnds[{self.name}] [reversed_input]"
+                f"[INIT] {self.name}.rev_propagate() | initialize output -> bnds[{self.name}] [reversed_input]"
             )
             # In real implementation, these would come from output specification
             self.cache.bnds[self.name] = ("output constraint bounds",)
@@ -70,13 +72,13 @@ class Toy2Node(T2Node[Toy2Cache, Toy2Argument]):
         # Step 3: Intersect with forward bounds (if available)
         self.intersect_and_update_bnd()
 
-    def backward(self):
+    def bwd_backsub(self):
         """
         Backward propagation.
 
         :raises RuntimeError: Always
         """
-        raise RuntimeError("backward() is not implemented in Toy2Node.")
+        raise RuntimeError("bwd_backsub() is not implemented in Toy2Node.")
 
     def clear_fwd_cache(self):
         """
@@ -87,13 +89,15 @@ class Toy2Node(T2Node[Toy2Cache, Toy2Argument]):
         """
         # Only clear internal nodes (preserve input/output)
         if len(self.next_nodes) > 0 and len(self.pre_nodes) > 0:
-            print(f"[CLEAR] {self.name}.clear_fwd_cache() | clear fwd_cache → bnds[{self.name}]")
+            print(f"[CLEAR] {self.name}.clear_fwd_cache() | clear fwd_cache -> bnds[{self.name}]")
             del self.cache.bnds[self.name]
         if self.name in self.cache.symbnds:
-            print(f"[CLEAR] {self.name}.clear_fwd_cache() | clear fwd_cache → symbnds[{self.name}]")
+            print(
+                f"[CLEAR] {self.name}.clear_fwd_cache() | clear fwd_cache -> symbnds[{self.name}]"
+            )
             del self.cache.symbnds[self.name]
         if self.name in self.cache.rlxs:
-            print(f"[CLEAR] {self.name}.clear_fwd_cache() | clear fwd_cache → rlxs[{self.name}]")
+            print(f"[CLEAR] {self.name}.clear_fwd_cache() | clear fwd_cache -> rlxs[{self.name}]")
             del self.cache.rlxs[self.name]
 
     def clear_bwd_cache(self):
@@ -122,8 +126,8 @@ class Toy2Node(T2Node[Toy2Cache, Toy2Argument]):
         In template2/, build_rlx() builds INVERSE relaxations because the graph
         is reversed. The method name now matches its usage.
         """
-        print(f"[RELAX] {self.name}.build_rlx() | compute inverse_rlx → rlxs[{self.name}]")
-        print(f"[CACHE] {self.name}.build_rlx() | store rlxs → cache.rlxs[{self.name}]")
+        print(f"[RELAX] {self.name}.build_rlx() | compute inverse_rlx -> rlxs[{self.name}]")
+        print(f"[CACHE] {self.name}.build_rlx() | store rlxs -> cache.rlxs[{self.name}]")
         self.cache.rlxs[self.name] = ("inverse relaxation",)
 
     def fwdprop_symbnd(self):
@@ -135,16 +139,16 @@ class Toy2Node(T2Node[Toy2Cache, Toy2Argument]):
         """
         if len(self.pre_nodes) == 0:
             print(
-                f"[PROPAGATE] {self.name}.forward() | prepare symbnds → symbnds[{self.name}] [input]"
+                f"[PROPAGATE] {self.name}.forward() | prepare symbnds -> symbnds[{self.name}] [input]"
             )
         else:
             pre_names = [pre_node.name for pre_node in self.pre_nodes]
             pre_str = ", ".join(pre_names)
             print(
-                f"[PROPAGATE] {self.name}.forward() | fwd_propagate → symbnds[{self.name}] [from: {pre_str}]"
+                f"[PROPAGATE] {self.name}.forward() | fwd_propagate -> symbnds[{self.name}] [from: {pre_str}]"
             )
 
-        print(f"[CACHE] {self.name}.forward() | store symbnds → cache.symbnds[{self.name}]")
+        print(f"[CACHE] {self.name}.forward() | store symbnds -> cache.symbnds[{self.name}]")
         self.cache.symbnds[self.name] = ("symbolic bounds",)
 
     def cal_and_update_cur_node_bnd(self):
@@ -153,8 +157,8 @@ class Toy2Node(T2Node[Toy2Cache, Toy2Argument]):
 
         In template2, this typically computes bounds and stores them in cache.bnds.
         """
-        print(f"[COMPUTE] {self.name}.forward() | calculate bounds → bnds[{self.name}]")
-        print(f"[CACHE] {self.name}.forward() | store bnds → cache.bnds[{self.name}]")
+        print(f"[COMPUTE] {self.name}.forward() | calculate bounds -> bnds[{self.name}]")
+        print(f"[CACHE] {self.name}.forward() | store bnds -> cache.bnds[{self.name}]")
         self.cache.bnds[self.name] = ("computed bounds",)
 
     # New methods for template2
@@ -172,9 +176,9 @@ class Toy2Node(T2Node[Toy2Cache, Toy2Argument]):
         pre_names = [pre_node.name for pre_node in self.pre_nodes]
         pre_str = ", ".join(pre_names)
         print(
-            f"[PROPAGATE] {self.name}.forward() | propagate bounds → bnds[{self.name}] [from: {pre_str}]"
+            f"[PROPAGATE] {self.name}.forward() | propagate bounds -> bnds[{self.name}] [from: {pre_str}]"
         )
-        print(f"[CACHE] {self.name}.forward() | store bnds → cache.bnds[{self.name}]")
+        print(f"[CACHE] {self.name}.forward() | store bnds -> cache.bnds[{self.name}]")
         self.cache.bnds[self.name] = ("propagated bounds",)
 
     def intersect_and_update_bnd(self):
@@ -188,8 +192,10 @@ class Toy2Node(T2Node[Toy2Cache, Toy2Argument]):
 
         In toy implementation, we just simulate this with a message.
         """
-        print(f"[COMPUTE] {self.name}.forward() | intersect bounds → bnds[{self.name}] [fwd ∩ bwd]")
-        print(f"[CACHE] {self.name}.forward() | update tightened → cache.bnds[{self.name}]")
+        print(
+            f"[COMPUTE] {self.name}.forward() | intersect bounds -> bnds[{self.name}] [fwd ∩ bwd]"
+        )
+        print(f"[CACHE] {self.name}.forward() | update tightened -> cache.bnds[{self.name}]")
         # In real implementation:
         # fwd = self.cache.fwd_bnds.get(self.name)
         # bwd = self.cache.bnds[self.name]

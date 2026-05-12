@@ -5,6 +5,8 @@ Tests constraint enforcement and error detection in the reversed graph model.
 Adapted from test_template/test_error_handling.py.
 """
 
+__docformat__ = "restructuredtext"
+
 import pytest
 
 from propdag import Toy2Model

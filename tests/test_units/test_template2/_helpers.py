@@ -1,15 +1,6 @@
 """Helpers for building T2 (template2/toy2) test models with minimal boilerplate."""
 
 __docformat__ = "restructuredtext"
-__all__ = [
-    "build_chain_model_t2",
-    "build_chain_nodes_t2",
-    "build_diamond_model_t2",
-    "build_invalid_io_nodes_t2",
-    "build_skip_model_t2",
-    "build_y_model_t2",
-    "make_nodes_t2",
-]
 
 from collections.abc import Sequence
 
@@ -41,7 +32,8 @@ def build_chain_nodes_t2(length: int) -> tuple[Toy2Cache, list[Toy2Node]]:
     Useful for tests that want to call ``topo_sort_*_t2`` directly on the
     user-orientation graph (Toy2Model construction reverses the edges).
 
-    :param length: number of nodes in the chain
+    :param length: number of nodes in the chain.
+
     :return: ``(cache, nodes)`` with edges pre_nodes/next_nodes wired
     """
     cache, arguments = _new_cache_args_t2()
@@ -61,8 +53,10 @@ def build_chain_model_t2(
 ) -> tuple[Toy2Model, Toy2Cache, list[Toy2Node]]:
     """Build a linear chain Node-1 -> ... -> Node-N as a Toy2Model.
 
-    :param length: number of nodes
-    :param sort_strategy: "bfs" or "dfs"
+    :param length: number of nodes.
+
+    :param sort_strategy: "bfs" or "dfs".
+
     :return: ``(model, cache, nodes)``
     """
     cache, arguments = _new_cache_args_t2()

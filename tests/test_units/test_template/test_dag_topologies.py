@@ -13,6 +13,8 @@ forward/backward propagation modes, resulting in 68 total test cases
 (17 topologies x 2 sort strategies x 2 propagation modes).
 """
 
+__docformat__ = "restructuredtext"
+
 import pytest
 
 from propdag import PropMode, ToyArgument, ToyCache, ToyModel

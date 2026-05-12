@@ -1,5 +1,7 @@
 """Pytest configuration and fixtures for Template2/Toy2 (T2) tests."""
 
+__docformat__ = "restructuredtext"
+
 import pytest
 
 from propdag import Toy2Argument, Toy2Cache, Toy2Node

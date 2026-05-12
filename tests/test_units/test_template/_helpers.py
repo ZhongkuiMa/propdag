@@ -1,15 +1,6 @@
 """Helpers for building T1 (template/toy) test models with minimal boilerplate."""
 
 __docformat__ = "restructuredtext"
-__all__ = [
-    "build_chain_model",
-    "build_cycle_nodes",
-    "build_diamond_model",
-    "build_skip_model",
-    "build_y_model",
-    "make_node",
-    "make_nodes",
-]
 
 from collections.abc import Sequence
 
@@ -31,10 +22,14 @@ def make_node(
 ) -> ForwardToyNode | BackwardToyNode:
     """Construct a ForwardToyNode or BackwardToyNode based on prop_mode.
 
-    :param name: node name
-    :param cache: shared ToyCache
-    :param arguments: shared ToyArgument
-    :param prop_mode: propagation mode controlling node concrete class
+    :param name: node name.
+
+    :param cache: shared ToyCache.
+
+    :param arguments: shared ToyArgument.
+
+    :param prop_mode: propagation mode controlling node concrete class.
+
     :return: a node of the appropriate concrete class
     """
     cls = ForwardToyNode if prop_mode == PropMode.FORWARD else BackwardToyNode
@@ -52,12 +47,18 @@ def make_nodes(
 ) -> list[ForwardToyNode | BackwardToyNode]:
     """Create ``count`` nodes named ``f'{prefix}-{i}'`` starting at ``start``.
 
-    :param count: number of nodes to create
-    :param cache: shared ToyCache
-    :param arguments: shared ToyArgument
-    :param prop_mode: propagation mode for the concrete class
-    :param start: first numeric suffix (default 1)
-    :param prefix: name prefix (default "Node")
+    :param count: number of nodes to create.
+
+    :param cache: shared ToyCache.
+
+    :param arguments: shared ToyArgument.
+
+    :param prop_mode: propagation mode for the concrete class.
+
+    :param start: first numeric suffix (default 1).
+
+    :param prefix: name prefix (default "Node").
+
     :return: list of newly constructed nodes
     """
     return [
@@ -82,11 +83,16 @@ def build_chain_model(
 ) -> tuple[ToyModel, ToyCache, list]:
     """Build a linear chain Node-1 -> ... -> Node-N as a ToyModel.
 
-    :param length: number of nodes in the chain
-    :param sort_strategy: "bfs" or "dfs"
-    :param prop_mode: propagation mode
-    :param verbose: forwarded to ToyModel
-    :param clear_cache_during_running: forwarded to ToyModel
+    :param length: number of nodes in the chain.
+
+    :param sort_strategy: "bfs" or "dfs".
+
+    :param prop_mode: propagation mode.
+
+    :param verbose: forwarded to ToyModel.
+
+    :param clear_cache_during_running: forwarded to ToyModel.
+
     :return: ``(model, cache, nodes)`` for assertions
     """
     cache, arguments = _new_cache_args(prop_mode)
@@ -183,8 +189,10 @@ def build_cycle_nodes(
     Supported scenarios: ``two_node``, ``three_node``, ``self_loop``, ``embedded``,
     ``multi_input``, ``multi_output``, ``no_input``, ``no_output``.
 
-    :param scenario: topology name
-    :param prop_mode: propagation mode for the constructed nodes
+    :param scenario: topology name.
+
+    :param prop_mode: propagation mode for the constructed nodes.
+
     :return: list of nodes ready to pass to ``ToyModel``
     """
     cache, arguments = _new_cache_args(prop_mode)

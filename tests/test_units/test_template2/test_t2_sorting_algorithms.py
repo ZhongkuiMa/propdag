@@ -11,6 +11,8 @@ Validates that:
 Adapted from test_template/test_sorting_algorithms.py for Template2/Toy2.
 """
 
+__docformat__ = "restructuredtext"
+
 import pytest
 from _helpers import verify_topological_order
 
@@ -28,7 +30,8 @@ _FORWARD_SORTS_T2 = [topo_sort_forward_bfs_t2, topo_sort_forward_dfs_t2]
 def _build_sort_topology_nodes_t2(topology: str) -> list[Toy2Node]:
     """Build nodes for a named topology, returning the user-orientation node list.
 
-    :param topology: one of ``"diamond"``, ``"skip_connection"``, ``"wide_merge"``
+    :param topology: one of ``"diamond"``, ``"skip_connection"``, ``"wide_merge"``.
+
     :return: list of wired Toy2Node instances
     """
     cache = Toy2Cache()

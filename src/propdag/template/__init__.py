@@ -28,4 +28,7 @@ __all__ = [
     "TNode",
     "clear_bwd_cache",
     "clear_fwd_cache",
+    "topo_sort_backward",
+    "topo_sort_forward_bfs",
+    "topo_sort_forward_dfs",
 ]

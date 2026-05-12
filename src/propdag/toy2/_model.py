@@ -1,3 +1,5 @@
+"""Toy2 model implementing reversed graph semantics with verbose logging."""
+
 __docformat__ = "restructuredtext"
 __all__ = ["Toy2Model"]
 

@@ -10,6 +10,8 @@ Validates that:
    correctly in isolation (added to close coverage gaps).
 """
 
+__docformat__ = "restructuredtext"
+
 import pytest
 
 from propdag import ForwardToyNode, PropMode, ToyArgument, ToyCache, ToyModel
@@ -23,10 +25,14 @@ class CacheSnapshot:
     def __init__(self, step: int, node_name: str, bnds_keys: set[str], symbnds_keys: set[str]):
         """Initialize a cache snapshot.
 
-        :param step: Execution step number
-        :param node_name: Name of the node that executed
-        :param bnds_keys: Keys present in cache.bnds after this step
-        :param symbnds_keys: Keys present in cache.symbnds after this step
+        :param step: Execution step number.
+
+        :param node_name: Name of the node that executed.
+
+        :param bnds_keys: Keys present in cache.bnds after this step.
+
+        :param symbnds_keys: Keys present in cache.symbnds after this step.
+
         """
         self.step = step
         self.node_name = node_name

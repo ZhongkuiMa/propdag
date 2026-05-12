@@ -23,7 +23,7 @@ Example Usage::
     cache.fwd_bnds["Input"] = ("initial forward bounds",)
     args = Toy2Argument(verbose=True)
 
-    # Build graph normally (Input → Output)
+    # Build graph normally (Input -> Output)
     input_node = Toy2Node("Input", cache, args)
     output_node = Toy2Node("Output", cache, args)
 

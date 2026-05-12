@@ -5,6 +5,8 @@ Provides reusable fixtures for creating test DAGs with forward and backward
 propagation modes, along with utility classes for cache tracking.
 """
 
+__docformat__ = "restructuredtext"
+
 import pytest
 
 from propdag import (
@@ -32,8 +34,10 @@ class CacheTracker:
         """
         Record current cache state after a node executes.
 
-        :param cache: The ToyCache instance
-        :param node_name: Name of the node that just executed
+        :param cache: The ToyCache instance.
+
+        :param node_name: Name of the node that just executed.
+
         """
         state: dict[str, object] = {
             "node": node_name,
@@ -46,7 +50,8 @@ class CacheTracker:
         """
         Get the set of keys in bnds after a specific step.
 
-        :param step_index: Index of the step (0-based)
+        :param step_index: Index of the step (0-based).
+
         :return: Set of bound keys at that step
         """
         if step_index < len(self.cache_history):
@@ -126,9 +131,12 @@ def instrumented_node_factory(toy_cache, forward_arguments, cache_tracker):
         """
         Create a node with optional cache tracking.
 
-        :param name: Node name
-        :param node_class: Node class to use (auto-selected if None)
-        :param prop_mode: Propagation mode (forward, backward, or backward_bound)
+        :param name: Node name.
+
+        :param node_class: Node class to use (auto-selected if None).
+
+        :param prop_mode: Propagation mode (forward, backward, or backward_bound).
+
         :return: Configured node instance
         """
         arguments = ToyArgument(prop_mode=prop_mode)
@@ -154,8 +162,10 @@ def node_factory(toy_cache):
         """
         Create a node.
 
-        :param name: Node name
-        :param prop_mode: Propagation mode (forward, backward, or backward_bound)
+        :param name: Node name.
+
+        :param prop_mode: Propagation mode (forward, backward, or backward_bound).
+
         :return: Configured node instance
         """
         arguments = ToyArgument(prop_mode=prop_mode)

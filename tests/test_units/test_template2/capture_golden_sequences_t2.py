@@ -11,6 +11,8 @@ From the test_template2 directory::
     python capture_golden_sequences_t2.py > golden_sequences_t2.py
 """
 
+__docformat__ = "restructuredtext"
+
 import re
 import sys
 from io import StringIO
@@ -28,9 +30,11 @@ from propdag import Toy2Argument, Toy2Cache, Toy2Model, Toy2Node  # noqa: E402
 def build_toy2_topology(topology_name, cache=None):
     """Build a topology for Toy2Model.
 
-    :param topology_name: Name of topology from TOPOLOGY_SPECS
+    :param topology_name: Name of topology from TOPOLOGY_SPECS.
+
     :type topology_name: str
-    :param cache: Optional Toy2Cache instance (creates new if None)
+    :param cache: Optional Toy2Cache instance (creates new if None).
+
     :type cache: Toy2Cache | None
     :returns: Tuple of (nodes_list, cache, input_name)
     :rtype: tuple[list[Toy2Node], Toy2Cache, str]
@@ -64,9 +68,11 @@ def build_toy2_topology(topology_name, cache=None):
 def capture_sequence(topology_name, sort_strategy):
     """Capture exact message sequence for a T2 topology.
 
-    :param topology_name: Name of the topology from TOPOLOGY_SPECS
+    :param topology_name: Name of the topology from TOPOLOGY_SPECS.
+
     :type topology_name: str
-    :param sort_strategy: Topological sort strategy ("bfs" or "dfs")
+    :param sort_strategy: Topological sort strategy ("bfs" or "dfs").
+
     :type sort_strategy: str
     :returns: List of (node_name, phase) tuples representing execution sequence
     :rtype: list[tuple[str, str]]

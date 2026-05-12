@@ -30,8 +30,10 @@ def clear_fwd_cache(cache_counter: dict[NodeType, int], nodes: Sequence[NodeType
     Decrements cache counter for specified nodes and clears caches when
     counter reaches zero.
 
-    :param cache_counter: Dictionary tracking how many next nodes still need each node's cache
-    :param nodes: List of nodes whose cache counters to decrement
+    :param cache_counter: Dictionary tracking how many next nodes still need each node's cache.
+
+    :param nodes: List of nodes whose cache counters to decrement.
+
     """
     for node in set(nodes):  # Use set to handle duplicate nodes in the sequence
         cache_counter[node] -= 1
@@ -47,8 +49,10 @@ def clear_bwd_cache(cache_counter: dict[NodeType, int], nodes: Sequence[NodeType
     Decrements cache counter for specified nodes and clears caches when
     counter reaches zero.
 
-    :param cache_counter: Dictionary tracking how many previous nodes still need each node's cache
-    :param nodes: List of nodes whose cache counters to decrement
+    :param cache_counter: Dictionary tracking how many previous nodes still need each node's cache.
+
+    :param nodes: List of nodes whose cache counters to decrement.
+
     """
     for node in nodes:
         if node in cache_counter:
@@ -87,10 +91,14 @@ class TModel(ABC):
         """
         Initialize a computational graph model.
 
-        :param nodes: Sequence of nodes to include in the model
-        :param verbose: Enable verbose output during execution
-        :param clear_cache_during_running: If True, clear forward and backward caches during execution
-        :raises AssertionError: If not all nodes share the same cache and arguments
+        :param nodes: Sequence of nodes to include in the model.
+
+        :param verbose: Enable verbose output during execution.
+
+        :param clear_cache_during_running: If True, clear forward and backward caches during execution.
+
+        :raises AssertionError: If not all nodes share the same cache and arguments.
+
         """
         self.verbose = verbose
         self.clear_cache_during_running = clear_cache_during_running
@@ -144,22 +152,24 @@ class TModel(ABC):
         optionally performs back-substitution based on propagation mode.
         Intelligently clears caches to optimize memory usage.
 
-        :param args: Positional arguments to pass to the model
-        :param kwargs: Keyword arguments to pass to the model
+        :param args: Positional arguments to pass to the model.
+
+        :param kwargs: Keyword arguments to pass to the model.
+
         """
         cache_counter = {node: len(node.next_nodes) for node in self._nodes}
 
         node = self.nodes[0]
         if self.verbose:
             print(f"Forward pass {node.name}")
-        node.forward()
+        node.propagate()
         # No need to backward for the input node.
 
         for i in range(1, len(self.nodes)):
             node = self.nodes[i]
             if self.verbose:
                 print(f"Forward pass {node.name}")
-            node.forward()
+            node.propagate()
 
             if self.arguments.prop_mode == PropMode.BACKWARD:
                 self.backsub(node)
@@ -177,7 +187,8 @@ class TModel(ABC):
         Executes backward passes for all nodes in the backward topological sort
         starting from the given node.
 
-        :param node: Node to start back-substitution from
+        :param node: Node to start back-substitution from.
+
         """
         backward_sort = self._all_backward_sorts[node]
 
@@ -189,13 +200,13 @@ class TModel(ABC):
 
         if self.verbose:
             print(f"\tBack-substitute {node.name}")
-        node.backward()
+        node.backsub()
 
         for j in range(1, len(backward_sort)):
             node = backward_sort[j]
             if self.verbose:
                 print(f"\tBack-substitute {node.name}")
-            node.backward()
+            node.backsub()
             if self.clear_cache_during_running:
                 clear_bwd_cache(cache_counter, node.next_nodes)
 

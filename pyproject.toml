@@ -140,6 +140,11 @@ ignore_missing_imports = true
 files = ["src/propdag"]
 exclude = ["tests", "venv", ".venv", "build", "dist"]
 
+[tool.pyright]
+typeCheckingMode = "basic"
+include = ["src/propdag"]
+exclude = ["tests", "venv", ".venv", "build", "dist"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = ["test_*.py"]

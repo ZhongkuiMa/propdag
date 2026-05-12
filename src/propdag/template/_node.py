@@ -40,9 +40,12 @@ class TNode(ABC, Generic[CacheType, ArgumentType]):
         """
         Initialize a node in the computational graph.
 
-        :param name: Name of the node
-        :param cache: Shared cache instance
-        :param argument: Shared arguments instance
+        :param name: Name of the node.
+
+        :param cache: Shared cache instance.
+
+        :param argument: Shared arguments instance.
+
         """
         self._name = name
         self._cache = cache
@@ -50,62 +53,67 @@ class TNode(ABC, Generic[CacheType, ArgumentType]):
         self._pre_nodes = []
         self._next_nodes = []
 
-    def forward(self):
+    def propagate(self) -> None:
         """
         Perform forward computation for this node.
 
         This method should be overridden by subclasses to implement
         specific forward computation logic.
 
-        :raises RuntimeError: If not implemented by subclass
+        :raises RuntimeError: If not implemented by subclass.
+
         """
         raise RuntimeError(f"This method should be instantiated in {type(self).__name__}.")
 
-    def backward(self):
+    def backsub(self) -> None:
         """
         Perform backward computation for this node.
 
         This method should be overridden by subclasses to implement
         specific backward computation logic.
 
-        :raises RuntimeError: If not implemented by subclass
+        :raises RuntimeError: If not implemented by subclass.
+
         """
         raise RuntimeError(f"This method should be instantiated in {type(self).__name__}.")
 
-    def clear_fwd_cache(self):
+    def clear_fwd_cache(self) -> None:
         """
         Clear forward computation cache.
 
         This method should be overridden by subclasses to implement
         specific cache clearing for forward computation.
 
-        :raises RuntimeError: If not implemented by subclass
+        :raises RuntimeError: If not implemented by subclass.
+
         """
         raise RuntimeError(f"This method should be instantiated in {type(self).__name__}.")
 
-    def clear_bwd_cache(self):
+    def clear_bwd_cache(self) -> None:
         """
         Clear backward computation cache.
 
         This method should be overridden by subclasses to implement
         specific cache clearing for backward computation.
 
-        :raises RuntimeError: If not implemented by subclass
+        :raises RuntimeError: If not implemented by subclass.
+
         """
         raise RuntimeError(f"This method should be instantiated in {type(self).__name__}.")
 
-    def init_symbnd(self):
+    def init_symbnd(self) -> None:
         """
         Initialize symbolic bounds.
 
         This method should be overridden by subclasses to implement
         initialization of symbolic bounds.
 
-        :raises RuntimeError: If not implemented by subclass
+        :raises RuntimeError: If not implemented by subclass.
+
         """
         raise RuntimeError(f"This method should be instantiated in {type(self).__name__}.")
 
-    def build_rlx(self):
+    def build_rlx(self) -> None:
         """
         Build relaxation for non-linear operations.
 
@@ -119,11 +127,12 @@ class TNode(ABC, Generic[CacheType, ArgumentType]):
             elif u <= 0: relaxation is zero
             else: compute triangle relaxation
 
-        :raises RuntimeError: If not implemented by subclass
+        :raises RuntimeError: If not implemented by subclass.
+
         """
         raise RuntimeError(f"This method should be instantiated in {type(self).__name__}.")
 
-    def fwdprop_symbnd(self):
+    def fwdprop_symbnd(self) -> None:
         """
         Forward propagate symbolic bounds.
 
@@ -136,11 +145,12 @@ class TNode(ABC, Generic[CacheType, ArgumentType]):
             # For y = Wx + b:
             symbolic_y = W * symbolic_x + b
 
-        :raises RuntimeError: If not implemented by subclass
+        :raises RuntimeError: If not implemented by subclass.
+
         """
         raise RuntimeError(f"This method should be instantiated in {type(self).__name__}.")
 
-    def bwdprop_symbnd(self):
+    def bwdprop_symbnd(self) -> None:
         """
         Backward propagate symbolic bounds via substitution.
 
@@ -153,18 +163,20 @@ class TNode(ABC, Generic[CacheType, ArgumentType]):
             # If z = f(y) and y = g(x), substitute:
             z_symbolic = f(g(x))  # Eliminates y
 
-        :raises RuntimeError: If not implemented by subclass
+        :raises RuntimeError: If not implemented by subclass.
+
         """
         raise RuntimeError(f"This method should be instantiated in {type(self).__name__}.")
 
-    def cal_and_update_cur_node_bnd(self):
+    def cal_and_update_cur_node_bnd(self) -> None:
         """
         Calculate and update bounds for current node.
 
         This method should be overridden by subclasses to implement
         bound calculation and updating.
 
-        :raises RuntimeError: If not implemented by subclass
+        :raises RuntimeError: If not implemented by subclass.
+
         """
         raise RuntimeError(f"This method should be instantiated in {type(self).__name__}.")
 
@@ -191,7 +203,8 @@ class TNode(ABC, Generic[CacheType, ArgumentType]):
         """
         Set shared cache instance.
 
-        :param value: Cache instance to use
+        :param value: Cache instance to use.
+
         """
         self._cache = value
 
@@ -209,7 +222,8 @@ class TNode(ABC, Generic[CacheType, ArgumentType]):
         """
         Set shared arguments instance.
 
-        :param value: Arguments instance to use
+        :param value: Arguments instance to use.
+
         """
         self._argument = value
 
@@ -227,7 +241,8 @@ class TNode(ABC, Generic[CacheType, ArgumentType]):
         """
         Set predecessor nodes.
 
-        :param value: List of nodes that precede this node
+        :param value: List of nodes that precede this node.
+
         """
         self._pre_nodes = value
 
@@ -245,6 +260,7 @@ class TNode(ABC, Generic[CacheType, ArgumentType]):
         """
         Set successor nodes.
 
-        :param value: List of nodes that succeed this node
+        :param value: List of nodes that succeed this node.
+
         """
         self._next_nodes = value

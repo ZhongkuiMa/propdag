@@ -9,6 +9,8 @@ Validates that:
 5. ``topo_sort_backward`` (previously uncovered) returns valid per-node sorts.
 """
 
+__docformat__ = "restructuredtext"
+
 import pytest
 from _helpers import verify_topological_order
 
@@ -26,7 +28,8 @@ _FORWARD_SORTS = [topo_sort_forward_bfs, topo_sort_forward_dfs]
 def _build_sort_topology_nodes(topology: str) -> list[ForwardToyNode]:
     """Build nodes for a named topology, returning the user-orientation node list.
 
-    :param topology: one of ``"diamond"``, ``"skip_connection"``, ``"wide_merge"``
+    :param topology: one of ``"diamond"``, ``"skip_connection"``, ``"wide_merge"``.
+
     :return: list of wired ForwardToyNode instances
     """
     cache = ToyCache()

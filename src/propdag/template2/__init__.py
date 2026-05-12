@@ -9,23 +9,23 @@ Graph edges are reversed internally, so "forward" propagation through the
 reversed graph achieves backward bound propagation naturally.
 
 **Key Differences from template/**:
-- template/: Graph Input → Output, backward_bound() goes Output → Input (confusing!)
-- template2/: Graph reversed Output → Input, forward() goes "forward" (clear!)
+- template/: Graph Input -> Output, backward_bound() goes Output -> Input (confusing!)
+- template2/: Graph reversed Output -> Input, forward() goes "forward" (clear!)
 
 **Single Mode**:
 Unlike template/ with multiple modes (FORWARD/BACKWARD),
 template2/ is single-purpose: backward bound propagation only.
 
 **Graph Reversal**:
-- User builds: Input → Hidden → Output (normal construction)
-- T2Model reverses to: Output → Hidden → Input (automatic)
-- Propagation flows "forward": Output → Hidden → Input
+- User builds: Input -> Hidden -> Output (normal construction)
+- T2Model reverses to: Output -> Hidden -> Input (automatic)
+- Propagation flows "forward": Output -> Hidden -> Input
 
 Example Usage::
 
     from propdag.template2 import T2Model, T2Node, T2Cache, T2Argument
 
-    # User builds graph normally (Input → Output)
+    # User builds graph normally (Input -> Output)
     cache = Toy2Cache()
     args = Toy2Argument()
 
@@ -37,7 +37,7 @@ Example Usage::
 
     # T2Model automatically reverses edges internally
     model = T2Model([input_node, output_node])
-    model.run()  # forward() propagates Output → Input (backward propagation!)
+    model.run()  # forward() propagates Output -> Input (backward propagation!)
 
 Components:
 - T2Argument: Arguments for reversed graph models (no prop_mode needed)

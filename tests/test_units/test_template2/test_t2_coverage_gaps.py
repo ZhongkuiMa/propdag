@@ -10,6 +10,8 @@ Focuses on previously untested code paths:
 6. Graph-reversal book-keeping (user_input / user_output)
 """
 
+__docformat__ = "restructuredtext"
+
 import pytest
 
 from propdag import Toy2Model

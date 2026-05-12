@@ -20,9 +20,12 @@ def _t2_check_input_output_number(nodes: Sequence["T2Node"], verbose: bool = Fal
     - "Input" node (pre_nodes=[]) = user's OUTPUT node
     - "Output" node (next_nodes=[]) = user's INPUT node
 
-    :param nodes: Sequence of nodes in the reversed computational graph
-    :param verbose: Whether to print diagnostics
-    :raises ValueError: When number of input or output nodes is not equal to 1
+    :param nodes: Sequence of nodes in the reversed computational graph.
+
+    :param verbose: Whether to print diagnostics.
+
+    :raises ValueError: When number of input or output nodes is not equal to 1.
+
     """
     n_inputs = 0
     n_outputs = 0
@@ -42,19 +45,22 @@ def topo_sort_forward_dfs_t2(nodes: Sequence["T2Node"], verbose: bool = False) -
 
     **Reversed Graph Semantics**:
     This function is called AFTER T2Model reverses the graph edges.
-    The traversal direction (pre→next) remains the same as template/,
+    The traversal direction (pre->next) remains the same as template/,
     but because the graph is reversed, we're actually sorting from
     user's output to input.
 
     Example:
-        User builds: Input → Hidden → Output
-        After reversal: Output → Hidden → Input
+        User builds: Input -> Hidden -> Output
+        After reversal: Output -> Hidden -> Input
         This function sorts: [Output, Hidden, Input]
 
-    :param nodes: Sequence of nodes in REVERSED graph
-    :param verbose: Whether to print diagnostics
-    :return: Topologically sorted list (Output → Input in user's view)
-    :raises ValueError: If the graph contains a cycle
+    :param nodes: Sequence of nodes in REVERSED graph.
+
+    :param verbose: Whether to print diagnostics.
+
+    :return: Topologically sorted list (Output -> Input in user's view)
+    :raises ValueError: If the graph contains a cycle.
+
     """
     _t2_check_input_output_number(nodes, verbose)
 
@@ -97,8 +103,10 @@ def topo_sort_backward_t2(
     In the reversed graph context, this traverses backward through pre_nodes
     which point toward the user's output (graph input).
 
-    :param nodes: Sequence of nodes in the REVERSED computational graph
-    :param verbose: Whether to print diagnostics
+    :param nodes: Sequence of nodes in the REVERSED computational graph.
+
+    :param verbose: Whether to print diagnostics.
+
     :return: Dictionary mapping each node to its backward topological sort
     """
 
@@ -133,14 +141,17 @@ def topo_sort_forward_bfs_t2(nodes: Sequence["T2Node"], verbose: bool = False) -
     "output" (user's input) in the reversed graph.
 
     Example:
-        User builds: Input → Hidden → Output
-        After reversal: Output → Hidden → Input
-        BFS processes: [Output] → [Hidden] → [Input]
+        User builds: Input -> Hidden -> Output
+        After reversal: Output -> Hidden -> Input
+        BFS processes: [Output] -> [Hidden] -> [Input]
 
-    :param nodes: Sequence of nodes in REVERSED graph
-    :param verbose: Whether to print diagnostics
-    :return: Topologically sorted list (Output → Input in user's view)
-    :raises ValueError: If the graph contains a cycle
+    :param nodes: Sequence of nodes in REVERSED graph.
+
+    :param verbose: Whether to print diagnostics.
+
+    :return: Topologically sorted list (Output -> Input in user's view)
+    :raises ValueError: If the graph contains a cycle.
+
     """
     _t2_check_input_output_number(nodes, verbose)
 

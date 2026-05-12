@@ -9,6 +9,8 @@ Validates that:
 5. Valid DAGs (chain / diamond / skip) construct without error.
 """
 
+__docformat__ = "restructuredtext"
+
 import pytest
 
 from propdag import ToyModel

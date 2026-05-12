@@ -32,10 +32,13 @@ def reverse_dag(user_nodes: Sequence["T2Node"], verbose: bool = False) -> tuple[
     - User's OUTPUT node becomes the graph INPUT (pre_nodes=[])
     - User's INPUT node becomes the graph OUTPUT (next_nodes=[])
 
-    :param user_nodes: Sequence of nodes in user's forward graph
-    :param verbose: Whether to print diagnostic messages
+    :param user_nodes: Sequence of nodes in user's forward graph.
+
+    :param verbose: Whether to print diagnostic messages.
+
     :return: Tuple of (user_input, user_output) from the original forward graph
-    :raises ValueError: If graph doesn't have exactly one input and one output
+    :raises ValueError: If graph doesn't have exactly one input and one output.
+
     """
     # STEP 1: Validate user's forward graph (BEFORE reversal)
     user_input_nodes = [n for n in user_nodes if len(n.pre_nodes) == 0]
@@ -85,8 +88,10 @@ def clear_bwd_cache_t2(cache_counter: dict["T2Node", int], nodes: Sequence["T2No
     T2Model only clears backward cache (symbnds), not forward bounds (bnds).
     This preserves the computed bounds while freeing symbolic expressions.
 
-    :param cache_counter: Dictionary tracking how many next nodes still need each node's cache
-    :param nodes: List of nodes whose cache counters to decrement
+    :param cache_counter: Dictionary tracking how many next nodes still need each node's cache.
+
+    :param nodes: List of nodes whose cache counters to decrement.
+
     """
     for node in set(nodes):  # Use set to handle duplicate nodes
         cache_counter[node] -= 1
@@ -104,9 +109,9 @@ class T2Model(ABC):
     propagation without semantic confusion.
 
     **User Experience**:
-    - User builds: Input → Hidden → Output (normal graph construction)
-    - T2Model reverses to: Output → Hidden → Input (internal representation)
-    - run() propagates "forward": Output → Input (backward propagation!)
+    - User builds: Input -> Hidden -> Output (normal graph construction)
+    - T2Model reverses to: Output -> Hidden -> Input (internal representation)
+    - run() propagates "forward": Output -> Input (backward propagation!)
 
     **Comparison to TModel**:
     - TModel: Has multiple modes (FORWARD/BACKWARD)
@@ -119,7 +124,7 @@ class T2Model(ABC):
     - No cycles allowed
     - All nodes must share same cache and arguments
 
-    :ivar _nodes: Topologically sorted nodes (Output → Input after reversal)
+    :ivar _nodes: Topologically sorted nodes (Output -> Input after reversal)
     :ivar _sort_strategy: Sorting strategy used (dfs or bfs)
     :ivar _cache: Shared cache across all nodes
     :ivar _arguments: Shared arguments across all nodes
@@ -151,18 +156,25 @@ class T2Model(ABC):
         **CRITICAL**: This method reverses the user-provided graph edges!
 
         Process:
-        1. Validate user's forward graph (Input → Output)
+        1. Validate user's forward graph (Input -> Output)
         2. REVERSE ALL EDGES (swap pre_nodes ↔ next_nodes)
         3. Topological sort from new "input" (user's output)
         4. Verify reversal (first node = user's output, last = user's input)
 
-        :param user_nodes: Nodes in user's forward graph (Input → Output)
-        :param sort_strategy: Topological sort strategy (dfs or bfs)
-        :param verbose: Enable verbose output during execution
-        :param clear_cache_during_running: Clear caches during execution
-        :raises ValueError: If graph doesn't have exactly one input and one output
-        :raises ValueError: If graph has cycles
-        :raises AssertionError: If not all nodes share the same cache and arguments
+        :param user_nodes: Nodes in user's forward graph (Input -> Output).
+
+        :param sort_strategy: Topological sort strategy (dfs or bfs).
+
+        :param verbose: Enable verbose output during execution.
+
+        :param clear_cache_during_running: Clear caches during execution.
+
+        :raises ValueError: If graph doesn't have exactly one input and one output.
+
+        :raises ValueError: If graph has cycles.
+
+        :raises AssertionError: If not all nodes share the same cache and arguments.
+
         """
         self.verbose = verbose
         self.clear_cache_during_running = clear_cache_during_running
@@ -220,17 +232,19 @@ class T2Model(ABC):
         1. forward(): Build inverse relaxations and propagate bounds
         2. Optionally clear cache when no longer needed
 
-        :param args: Positional arguments (unused, for future extensions)
-        :param kwargs: Keyword arguments (unused, for future extensions)
+        :param args: Positional arguments (unused, for future extensions).
+
+        :param kwargs: Keyword arguments (unused, for future extensions).
+
         """
         cache_counter = {node: len(node.next_nodes) for node in self._nodes}
 
-        # Process all nodes in topological order (Output → Input in user's view)
+        # Process all nodes in topological order (Output -> Input in user's view)
         for i, node in enumerate(self._nodes):
             if self.verbose:
                 print(f"Propagate bounds through {node.name}")
 
-            node.forward()  # Actually does backward propagation!
+            node.rev_propagate()  # Actually does backward propagation!
 
             # Clear predecessor caches when no longer needed
             if self.clear_cache_during_running and i > 0:
@@ -254,7 +268,7 @@ class T2Model(ABC):
         """
         Get the nodes in REVERSED topological order.
 
-        **IMPORTANT**: These are in reversed graph order (Output → Input in user's view).
+        **IMPORTANT**: These are in reversed graph order (Output -> Input in user's view).
 
         :return: Topologically sorted list of nodes in reversed graph.
         """

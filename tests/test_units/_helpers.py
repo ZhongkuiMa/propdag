@@ -6,7 +6,6 @@ to avoid generic-factory abstraction that obscures the test setup.
 """
 
 __docformat__ = "restructuredtext"
-__all__ = ["verify_topological_order"]
 
 
 def verify_topological_order(sorted_nodes: list) -> None:

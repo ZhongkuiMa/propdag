@@ -13,9 +13,12 @@ def _check_input_output_number(nodes: Sequence[NodeType], verbose: bool = False)
     """
     Verify that the graph has exactly one input node and one output node.
 
-    :param nodes: Sequence of nodes in the computational graph
-    :param verbose: Whether to print diagnostics
-    :raises ValueError: When number of input or output nodes is not equal to 1
+    :param nodes: Sequence of nodes in the computational graph.
+
+    :param verbose: Whether to print diagnostics.
+
+    :raises ValueError: When number of input or output nodes is not equal to 1.
+
     """
     n_inputs = 0
     n_outputs = 0
@@ -37,10 +40,13 @@ def topo_sort_forward_dfs(nodes: Sequence[NodeType], verbose: bool = False) -> l
     Sometimes, we need depth-first search because we want to cache the nodes close to
     the input node. If a layer close to the input has fewer dimensions.
 
-    :param nodes: Sequence of nodes to sort
-    :param verbose: Whether to print diagnostics
+    :param nodes: Sequence of nodes to sort.
+
+    :param verbose: Whether to print diagnostics.
+
     :return: Topologically sorted list of nodes
-    :raises ValueError: If the graph contains a cycle
+    :raises ValueError: If the graph contains a cycle.
+
     """
     _check_input_output_number(nodes, verbose)
 
@@ -78,10 +84,13 @@ def topo_sort_forward_bfs(nodes: Sequence[NodeType], verbose: bool = False) -> l
     We need breadth-first search because we do not want to cache the nodes close to
     the input node. In neural networks, a layer close to the input has more dimensions.
 
-    :param nodes: Sequence of nodes to sort
-    :param verbose: Whether to print diagnostics
+    :param nodes: Sequence of nodes to sort.
+
+    :param verbose: Whether to print diagnostics.
+
     :return: Topologically sorted list of nodes
-    :raises ValueError: If the graph contains a cycle
+    :raises ValueError: If the graph contains a cycle.
+
     """
     _check_input_output_number(nodes, verbose)
 
@@ -115,8 +124,10 @@ def topo_sort_backward(
     for back-substitution from that node.
     Here, the DFS (Depth-First Search) algorithm is used to traverse the graph.
 
-    :param nodes: Sequence of nodes in the computational graph
-    :param verbose: Whether to print diagnostics
+    :param nodes: Sequence of nodes in the computational graph.
+
+    :param verbose: Whether to print diagnostics.
+
     :return: Dictionary mapping each node to its backward topological sort
     """
 

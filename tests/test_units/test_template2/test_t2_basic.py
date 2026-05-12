@@ -4,6 +4,8 @@ Test suite for basic T2Model and Toy2Node functionality.
 Tests initialization, execution, cache structure, and sort strategies.
 """
 
+__docformat__ = "restructuredtext"
+
 import pytest
 
 from propdag import Toy2Argument, Toy2Model, Toy2Node, clear_bwd_cache_t2
@@ -46,18 +48,18 @@ def test_t2model_run(toy2_node_factory, toy2_cache):
 
 
 def test_toy2node_forward(toy2_cache, toy2_arguments):
-    """Verify forward() method works."""
+    """Verify rev_propagate() method works."""
     node = Toy2Node("TestNode", toy2_cache, toy2_arguments)
 
     # Set up cache state
     toy2_cache.cur_node = node
     toy2_cache.fwd_bnds["TestNode"] = ("test bounds",)
 
-    # Call forward (should not crash)
-    node.forward()
+    # Call rev_propagate (should not crash)
+    node.rev_propagate()
 
-    # Verify forward() populated bounds for the node
-    assert "TestNode" in toy2_cache.bnds, "forward() must populate cache.bnds"
+    # Verify rev_propagate() populated bounds for the node
+    assert "TestNode" in toy2_cache.bnds, "rev_propagate() must populate cache.bnds"
 
 
 def test_toy2node_build_rlx(toy2_cache, toy2_arguments):

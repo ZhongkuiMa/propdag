@@ -7,6 +7,8 @@ T2 has simpler cache management than T1:
 - Simpler clearing logic (not implemented in Toy2Node)
 """
 
+__docformat__ = "restructuredtext"
+
 import pytest
 
 from propdag import Toy2Cache

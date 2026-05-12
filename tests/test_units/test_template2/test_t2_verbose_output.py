@@ -5,6 +5,8 @@ Verifies that toy2 models produce correctly formatted messages that
 accurately represent the template2 logic flow.
 """
 
+__docformat__ = "restructuredtext"
+
 import sys
 from pathlib import Path
 
@@ -309,7 +311,7 @@ class TestToy2TopologyVerboseOutput:
         """Verify exact message sequence against golden output for T2.
 
         This test validates:
-        1. All messages match format: [PHASE] NodeName.method() | operation → target [context]
+        1. All messages match format: [PHASE] NodeName.method() | operation -> target [context]
         2. Exact sequence matches golden output (complete execution correctness)
         3. Output node has valid bounds in cache
         4. Input node fwd_bnds are preserved

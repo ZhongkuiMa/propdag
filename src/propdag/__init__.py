@@ -56,6 +56,8 @@ from propdag.toy2 import (
 )
 
 __all__ = [
+    "BackwardToyNode",
+    "ForwardToyNode",
     "PropMode",
     "T2Argument",
     "T2ArgumentType",
@@ -71,11 +73,17 @@ __all__ = [
     "Toy2Cache",
     "Toy2Model",
     "Toy2Node",
+    "ToyArgument",
+    "ToyCache",
+    "ToyModel",
     "__version__",
     "clear_bwd_cache",
     "clear_bwd_cache_t2",
     "clear_fwd_cache",
     "reverse_dag",
+    "topo_sort_backward",
+    "topo_sort_forward_bfs",
     "topo_sort_forward_bfs_t2",
+    "topo_sort_forward_dfs",
     "topo_sort_forward_dfs_t2",
 ]

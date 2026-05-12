@@ -9,6 +9,8 @@ Focuses on previously untested code paths:
 5. Cache clearing in verbose mode
 """
 
+__docformat__ = "restructuredtext"
+
 import pytest
 
 from propdag import PropMode, ToyModel

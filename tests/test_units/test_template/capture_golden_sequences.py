@@ -11,6 +11,8 @@ From the test_template directory::
     python capture_golden_sequences.py > golden_sequences.py
 """
 
+__docformat__ = "restructuredtext"
+
 import re
 import sys
 from io import StringIO
@@ -23,11 +25,14 @@ from propdag import PropMode, ToyModel
 def capture_sequence(topology_name, prop_mode, sort_strategy):
     """Capture exact message sequence for a topology.
 
-    :param topology_name: Name of the topology from TOPOLOGY_SPECS
+    :param topology_name: Name of the topology from TOPOLOGY_SPECS.
+
     :type topology_name: str
-    :param prop_mode: Propagation mode (FORWARD or BACKWARD)
+    :param prop_mode: Propagation mode (FORWARD or BACKWARD).
+
     :type prop_mode: PropMode
-    :param sort_strategy: Topological sort strategy ("bfs" or "dfs")
+    :param sort_strategy: Topological sort strategy ("bfs" or "dfs").
+
     :type sort_strategy: str
     :returns: List of (node_name, phase) tuples representing execution sequence
     :rtype: list[tuple[str, str]]

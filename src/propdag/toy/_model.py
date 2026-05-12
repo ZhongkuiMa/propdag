@@ -1,3 +1,5 @@
+"""Toy model implementation for educational purposes."""
+
 __docformat__ = "restructuredtext"
 __all__ = ["ToyModel"]
 

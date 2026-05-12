@@ -7,6 +7,8 @@ propagation. Also covers the validation logic and error messages of
 ``reverse_dag`` (formerly tested separately in ``test_reverse_dag.py``).
 """
 
+__docformat__ = "restructuredtext"
+
 import pytest
 
 from propdag import Toy2Model, reverse_dag

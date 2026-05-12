@@ -8,6 +8,8 @@ strategies. Unlike T1, T2 uses a single Toy2Node with automatic graph
 reversal for backward propagation, so PropMode is not parametrized here.
 """
 
+__docformat__ = "restructuredtext"
+
 import pytest
 
 from propdag import Toy2Argument, Toy2Cache, Toy2Model
