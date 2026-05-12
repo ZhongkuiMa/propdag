@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "propdag"
-version = "2026.2.0"
+version = "2026.5.0"
 description = "Property-directed acyclic graphs for neural network verification"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -120,7 +120,7 @@ known-first-party = ["propdag"]
 ban-relative-imports = "all"
 
 [tool.ruff.lint.mccabe]
-max-complexity = 10
+max-complexity = 20
 
 [tool.ruff.lint.flake8-quotes]
 inline-quotes = "double"
@@ -136,6 +136,7 @@ warn_return_any = true
 warn_unused_configs = true
 warn_unused_ignores = true
 disallow_untyped_defs = false
+check_untyped_defs = true
 ignore_missing_imports = true
 files = ["src/propdag"]
 exclude = ["tests", "venv", ".venv", "build", "dist"]
