@@ -329,4 +329,3 @@ tests/
 | 15.5 | **Type annotations**: Annotate only when the type is not obvious from the literal | ☐ |
 | 15.6 | **Frozen collections**: Use `frozenset` or `tuple` for constant collections — never mutable `list` or `set` | ☐ |
 | 15.7 | **File-level private constants**: Use `_` prefix + UPPER_CASE — `_DEFAULT_MATMUL_BOUND` | ☐ |
-

@@ -15,7 +15,7 @@ Main components:
 
 __docformat__ = "restructuredtext"
 
-__version__ = "2026.5.0"
+__version__ = "2026.5.1"
 
 from propdag._enums import PropMode
 from propdag.template import (
